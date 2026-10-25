@@ -3,12 +3,20 @@ name: Release desktop installers
 on:
   push:
     tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      windows_only:
+        description: Build only Windows installers for an existing release
+        type: boolean
+        required: true
+        default: true
 
 permissions:
   contents: write
 
 jobs:
   release:
+    if: github.event_name != 'workflow_dispatch' || !inputs.windows_only || matrix.platform == 'windows-latest'
     strategy:
       fail-fast: false
       matrix:
