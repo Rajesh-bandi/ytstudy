@@ -60,11 +60,12 @@ The frontend communicates through the single adapter in `src/services/api`. The 
 
 - Node.js and pnpm (the lockfile uses pnpm).
 - Rust toolchain and Cargo.
-- Tauri 2 Linux system libraries. On Arch Linux, install `webkit2gtk-4.1`, `gtk3`, `librsvg`, and `libappindicator-gtk3` before building.
-- `yt-dlp` is optional and used to retrieve YouTube lesson metadata and captions for lesson context. On Arch Linux: `sudo pacman -S yt-dlp`.
+- Linux builds need Tauri 2 system libraries. On Arch Linux, install `webkit2gtk-4.1`, `gtk3`, `librsvg`, and `libappindicator-gtk3` first.
+- Windows development builds need the MSVC Rust toolchain and Visual Studio C++ Build Tools with **Desktop development with C++**. Windows 10 and later generally include the WebView2 runtime; older installations may need it installed separately.
+- `yt-dlp` is optional and used to retrieve YouTube lesson metadata and captions for lesson context. On Arch Linux: `sudo pacman -S yt-dlp`. On Windows, make `yt-dlp.exe` available on `PATH` to enable this feature.
 - Linux media playback may require GStreamer H.264/VP9 codecs.
 
-The Tauri configuration currently targets Linux packages (`deb`, AppImage, and RPM). Windows support has not been built or verified.
+The Linux configuration targets `.deb`, AppImage, and RPM. A Windows GitHub Actions workflow builds MSI and NSIS installers on a native Windows runner; its first run is still needed to verify the Windows build.
 
 ## Development setup
 
@@ -119,6 +120,22 @@ cd ..
 
 The script does not require root. It installs under `~/.local` and hides the
 old FoxStudy launcher for this user.
+
+### Windows installers
+
+The [Windows installers workflow](.github/workflows/windows.yml) runs on pushes
+to `main` and can also be started manually from GitHub Actions. It builds MSI
+and NSIS installers on `windows-latest` and uploads them as a workflow artifact.
+To build locally on Windows after installing the prerequisites above:
+
+```powershell
+pnpm install --frozen-lockfile
+pnpm tauri build --features custom-protocol --bundles msi,nsis
+```
+
+The installers are written under
+`src-tauri/target/release/bundle/msi/` and
+`src-tauri/target/release/bundle/nsis/`.
 
 ## AI provider setup
 

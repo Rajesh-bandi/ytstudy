@@ -95,7 +95,7 @@ Legend: **Done** · **Partial** · **Not started**
 | SQLite via SQLx, idempotent migrations | **Done** | `migrations/` |
 | Single adapter (`services/api`) mirrored by the mock | **Done** | `services/api/*` |
 | Debug binary build + run | **Done** | `cd src-tauri && cargo build` |
-| Windows build | **Partial** | portable code, never built |
+| Windows build | **Partial** | native MSI/NSIS workflow added; first Windows runner build still pending |
 | `.deb` / AppImage packaging | **Partial** | config present, not produced |
 | Sync between devices / backup | **Not started** | UUIDs and revisions ready |
 

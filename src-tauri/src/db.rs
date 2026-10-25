@@ -1,5 +1,4 @@
 use std::path::PathBuf;
-use std::str::FromStr;
 
 use chrono::Local;
 use sqlx::sqlite::{SqliteConnectOptions, SqliteJournalMode, SqlitePool, SqlitePoolOptions};
@@ -17,8 +16,8 @@ impl Db {
         tokio::fs::create_dir_all(&dir).await?;
         migrate_legacy_database(&dir).await?;
 
-        let opts = SqliteConnectOptions::from_str(&format!("sqlite://{}", dir.join("ytstudy.db").display()))
-            .expect("path built")
+        let opts = SqliteConnectOptions::new()
+            .filename(dir.join("ytstudy.db"))
             .journal_mode(SqliteJournalMode::Wal)
             .foreign_keys(true)
             .create_if_missing(true);
@@ -154,26 +153,47 @@ async fn migrate_legacy_database(new_db_dir: &std::path::Path) -> Result<(), Box
 }
 
 fn legacy_data_dir() -> PathBuf {
-    if let Ok(path) = std::env::var("FOXSTUDY_DATA_DIR") {
+    if let Some(path) = std::env::var_os("FOXSTUDY_DATA_DIR") {
         return PathBuf::from(path);
     }
-    let base = std::env::var("XDG_DATA_HOME")
-        .map(PathBuf::from)
-        .unwrap_or_else(|_| {
-            let home = std::env::var("HOME").unwrap_or_else(|_| ".".into());
-            PathBuf::from(home).join(".local/share")
-        });
-    base.join("foxstudy")
+    data_root().join("foxstudy")
 }
 
 fn default_data_dir() -> PathBuf {
-    let base = std::env::var("XDG_DATA_HOME")
-        .map(PathBuf::from)
-        .unwrap_or_else(|_| {
-            let home = std::env::var("HOME").unwrap_or_else(|_| ".".into());
-            PathBuf::from(home).join(".local/share")
-        });
-    base.join("ytstudy")
+    data_root().join("ytstudy")
+}
+
+fn data_root() -> PathBuf {
+    #[cfg(target_os = "windows")]
+    {
+        if let Some(path) = std::env::var_os("APPDATA") {
+            return PathBuf::from(path);
+        }
+        let home = std::env::var_os("USERPROFILE")
+            .map(PathBuf::from)
+            .unwrap_or_else(|| PathBuf::from("."));
+        return home.join("AppData").join("Roaming");
+    }
+
+    #[cfg(target_os = "macos")]
+    {
+        let home = std::env::var_os("HOME")
+            .map(PathBuf::from)
+            .unwrap_or_else(|| PathBuf::from("."));
+        return home.join("Library").join("Application Support");
+    }
+
+    #[cfg(not(any(target_os = "windows", target_os = "macos")))]
+    {
+        std::env::var_os("XDG_DATA_HOME")
+            .map(PathBuf::from)
+            .unwrap_or_else(|| {
+                let home = std::env::var_os("HOME")
+                    .map(PathBuf::from)
+                    .unwrap_or_else(|| PathBuf::from("."));
+                home.join(".local").join("share")
+            })
+    }
 }
 
 pub fn today_key() -> String {
