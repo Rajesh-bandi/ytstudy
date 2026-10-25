@@ -65,7 +65,7 @@ The frontend communicates through the single adapter in `src/services/api`. The 
 - `yt-dlp` is optional and used to retrieve YouTube lesson metadata and captions for lesson context. On Arch Linux: `sudo pacman -S yt-dlp`. On Windows, make `yt-dlp.exe` available on `PATH` to enable this feature.
 - Linux media playback may require GStreamer H.264/VP9 codecs.
 
-The Linux configuration targets `.deb`, AppImage, and RPM. GitHub Actions builds Windows installers on a native Windows runner. Push a `v*` tag to run the release workflow, which creates one GitHub Release containing both Linux and Windows installers. The first Windows runner build is still needed to verify Windows compatibility.
+The Linux configuration targets `.deb`, AppImage, and RPM. GitHub Actions builds Windows installers on a native Windows runner. Push a `v*` tag to run the release workflow, which creates one GitHub Release containing both Linux and Windows installers. A `release-*` branch triggers the same build and takes its tag from `src-tauri/tauri.conf.json`, so a release can be started without creating a tag by hand.
 
 ## Development setup
 
@@ -128,7 +128,8 @@ to `main` and can also be started manually from GitHub Actions. It builds MSI
 and NSIS installers on `windows-latest` and uploads them as a workflow artifact.
 The [release workflow](.github/workflows/release.yml) builds both platform sets
 and publishes the Linux and Windows installers to a GitHub Release when a
-version tag such as `v0.1.0` is pushed.
+version tag such as `v0.1.0` is pushed, when a `release-*` branch is pushed,
+or when it is dispatched manually with a version tag.
 To build locally on Windows after installing the prerequisites above:
 
 ```powershell

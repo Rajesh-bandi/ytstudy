@@ -3,6 +3,7 @@ name: Release desktop installers
 on:
   push:
     tags: ["v*"]
+    branches: ["release-*"]
   workflow_dispatch:
     inputs:
       version:
@@ -40,6 +41,25 @@ jobs:
           node-version: 22
           cache: pnpm
 
+      # A tag push names the release. A `release-*` branch or a manual run
+      # derives it from the version in tauri.conf.json instead, so the
+      # installers and the release always agree.
+      - name: Resolve release tag
+        id: release
+        shell: bash
+        env:
+          INPUT_VERSION: ${{ inputs.version }}
+        run: |
+          if [ -n "$INPUT_VERSION" ]; then
+            tag="$INPUT_VERSION"
+          elif [[ "$GITHUB_REF" == refs/tags/* ]]; then
+            tag="$GITHUB_REF_NAME"
+          else
+            tag="v$(node -p "require('./src-tauri/tauri.conf.json').version")"
+          fi
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "Release tag: $tag"
+
       - name: Set up Rust
         uses: dtolnay/rust-toolchain@stable
 
@@ -69,8 +89,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tauriScript: pnpm tauri
-          tagName: ${{ inputs.version || github.ref_name }}
-          releaseName: YTStudy ${{ inputs.version || github.ref_name }}
+          tagName: ${{ steps.release.outputs.tag }}
+          releaseName: YTStudy ${{ steps.release.outputs.tag }}
           releaseBody: >-
             YTStudy installers for Linux (DEB, AppImage, RPM) and Windows (MSI,
             NSIS setup executable).

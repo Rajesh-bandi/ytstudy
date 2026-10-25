@@ -1,6 +1,6 @@
 [package]
 name = "ytstudy"
-version = "0.1.0"
+version = "0.2.0"
 description = "Study companion: scheduler, playlists, progress"
 authors = ["you"]
 edition = "2021"
