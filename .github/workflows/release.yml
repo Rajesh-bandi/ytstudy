@@ -7,10 +7,10 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: Release tag to build and publish (for example v0.1.0)
+        description: Release tag to build and publish (empty uses the version in tauri.conf.json)
         type: string
-        required: true
-        default: v0.1.0
+        required: false
+        default: ""
       windows_only:
         description: Build only Windows installers for an existing release
         type: boolean
