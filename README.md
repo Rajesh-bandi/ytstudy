@@ -102,10 +102,20 @@ cargo build
 Run the debug executable from the repository root:
 
 ```bash
-./src-tauri/target/debug/foxstudy
+./src-tauri/target/debug/ytstudy
 ```
 
-The current Rust binary is named `foxstudy` in this source checkout. The application window and Tauri bundle identify as FoxStudy; the GitHub repository and project documentation are named YTStudy.
+The Rust binary, application window, Tauri bundle, desktop launcher, and repository are named YTStudy.
+
+After building, install it for the current Linux user (including its icon and
+desktop launcher) with:
+
+```bash
+./install-omarchy.sh
+```
+
+The script does not require root. It installs under `~/.local` and hides the
+old FoxStudy launcher for this user.
 
 ## AI provider setup
 
@@ -116,6 +126,7 @@ Without a provider, the local companion can still answer basic progress question
 ## Data, privacy, and network use
 
 - Desktop planner data, notes, generated study artifacts, chat history, and settings are stored locally in SQLite; there is no account or synchronization service in this project.
+- On first launch after upgrading from FoxStudy, the app copies the existing SQLite database and its write-ahead log into the YTStudy data directory. The old database remains as a backup.
 - The planner and progress tracking do not need a network connection after the app is installed.
 - YouTube playlist import needs a network connection and is best-effort. Anonymous YouTube interfaces may return only part of a large playlist; private, age-restricted, or region-blocked playlists may not import.
 - YouTube playback is embedded. Other lesson URLs open in the system browser.
@@ -143,6 +154,7 @@ src/services/api/             Tauri API adapter and browser-only mock
 src-tauri/src/                Rust commands, scheduler, database, AI, and jobs
 src-tauri/migrations/         SQLite schema migrations
 src/styles/                   Theme tokens, theme mappings, and motion rules
+ytstudy.desktop               Linux desktop launcher entry
 FEATURES.md                   Detailed feature status and known behavior
 ```
 

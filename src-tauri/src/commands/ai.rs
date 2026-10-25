@@ -56,7 +56,7 @@ pub async fn ai_chat(
     thread.push(ChatMessage {
         role: "system".into(),
         content: format!(
-            "You are the study companion living inside FoxStudy, a desktop study planner. \
+            "You are the study companion living inside YTStudy, a desktop study planner. \
              You can see the learner's real progress, listed below. Be concise, concrete and \
              warm; use Markdown; prefer worked examples and one clear next action. \
              Never invent numbers — quote only what is in the progress block, and say so if \

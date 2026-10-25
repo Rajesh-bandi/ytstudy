@@ -96,7 +96,7 @@ export default function AiSettings() {
             <div className="text-[11px] leading-relaxed text-text-secondary">
               <span className="font-medium text-text-primary">Browser preview.</span> This tab runs on
               demo data: answers, notes and imports here are simulated and never call your gateway.
-              Open the FoxStudy desktop window to use your provider for real.
+              Open the YTStudy desktop window to use your provider for real.
             </div>
           </div>
         ) : null}

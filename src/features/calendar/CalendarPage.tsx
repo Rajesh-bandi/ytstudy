@@ -116,7 +116,7 @@ async function toggleOf(task: ScheduledTask) {
   if (task.status === "completed") await api.uncompleteTask(task.id);
   else await api.completeTask(task.id);
   // light refresh trigger; the map reload happens on navigation
-  window.dispatchEvent(new CustomEvent("foxstudy:refresh"));
+  window.dispatchEvent(new CustomEvent("ytstudy:refresh"));
 }
 
 function DayCell({

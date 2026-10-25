@@ -84,7 +84,7 @@ export function AppSidebar() {
               aria-hidden
               className="size-2 rounded-[1px] bg-warning"
             />
-            FoxStudy
+            YTStudy
           </p>
           <p className="mt-0.5 pl-4 text-[10.5px] italic text-text-muted transition-colors group-hover:text-text-secondary">
             one task at a time

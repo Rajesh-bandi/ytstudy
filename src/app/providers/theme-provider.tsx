@@ -9,7 +9,7 @@ import {
 } from "react";
 
 export type ThemeMode = "dark" | "light" | "system";
-const STORAGE_KEY = "foxstudy.theme";
+const STORAGE_KEY = "ytstudy.theme";
 
 interface ThemeCtx {
   mode: ThemeMode;

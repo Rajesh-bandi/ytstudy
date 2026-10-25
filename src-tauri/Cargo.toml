@@ -1,5 +1,5 @@
 [package]
-name = "foxstudy"
+name = "ytstudy"
 version = "0.1.0"
 description = "Study companion: scheduler, playlists, progress"
 authors = ["you"]

@@ -23,12 +23,12 @@ async fn main_async() {
     let db = match db::Db::open().await {
         Ok(d) => d,
         Err(e) => {
-            eprintln!("foxstudy: database open failed: {e:?}");
+            eprintln!("ytstudy: database open failed: {e:?}");
             std::process::exit(1);
         }
     };
 
-    // `foxstudy --rebuild` replans and prints the diff, then exits. Useful for
+    // `ytstudy --rebuild` replans and prints the diff, then exits. Useful for
     // checking the scheduler against real data without opening a window.
     if std::env::args().any(|a| a == "--rebuild") {
         match crate::scheduler::rebuild(&db, None).await {
@@ -43,7 +43,7 @@ async fn main_async() {
 
     let shared: AppDb = Arc::new(Mutex::new(db));
 
-    // `foxstudy --optimize` runs the companion's whole-plan review and prints
+    // `ytstudy --optimize` runs the companion's whole-plan review and prints
     // the result, then exits. Same engine the Planner button uses.
     if std::env::args().any(|a| a == "--optimize") {
         match commands::ai_plan::optimize_plan(&shared).await {
@@ -61,7 +61,7 @@ async fn main_async() {
     {
         let mut guard = shared.lock().await;
         if let Err(e) = crate::scheduler::autoheal(&mut guard).await {
-            eprintln!("foxstudy: startup schedule heal failed: {e:?}");
+            eprintln!("ytstudy: startup schedule heal failed: {e:?}");
         }
     }
 
@@ -78,7 +78,7 @@ async fn main_async() {
                     last_day = today;
                     let guard = heal_db.lock().await;
                     if let Err(e) = crate::scheduler::autoheal(&guard).await {
-                        eprintln!("foxstudy: day rollover heal failed: {e:?}");
+                        eprintln!("ytstudy: day rollover heal failed: {e:?}");
                     }
                 }
             }
@@ -94,7 +94,7 @@ async fn main_async() {
                 match jobs::worker_tick(&worker_db).await {
                     Ok(true) => continue,
                     Ok(false) => {}
-                    Err(e) => eprintln!("foxstudy: job worker error: {e}"),
+                    Err(e) => eprintln!("ytstudy: job worker error: {e}"),
                 }
                 tokio::time::sleep(std::time::Duration::from_secs(2)).await;
             }
@@ -152,5 +152,5 @@ async fn main_async() {
             commands::revision::get_artifacts,
         ])
         .run(tauri::generate_context!())
-        .expect("error while running foxstudy");
+        .expect("error while running ytstudy");
 }

@@ -270,7 +270,7 @@ pub async fn ai_optimize_plan(state: SharedDb<'_>) -> Result<AiPlanOptimize, Str
 }
 
 /// The engine behind the command, callable from the maintenance CLI
-/// (`foxstudy --optimize`) without a window.
+/// (`ytstudy --optimize`) without a window.
 pub async fn optimize_plan(shared: &crate::AppDb) -> Result<AiPlanOptimize, String> {
     let (cfg, lists, day_lines) = {
         let db = shared.lock().await;

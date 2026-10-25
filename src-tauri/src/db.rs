@@ -15,8 +15,9 @@ impl Db {
     pub async fn open() -> Result<Self, Box<dyn std::error::Error>> {
         let dir = app_data_dir()?.join("db");
         tokio::fs::create_dir_all(&dir).await?;
+        migrate_legacy_database(&dir).await?;
 
-        let opts = SqliteConnectOptions::from_str(&format!("sqlite://{}", dir.join("foxstudy.db").display()))
+        let opts = SqliteConnectOptions::from_str(&format!("sqlite://{}", dir.join("ytstudy.db").display()))
             .expect("path built")
             .journal_mode(SqliteJournalMode::Wal)
             .foreign_keys(true)
@@ -123,10 +124,46 @@ impl Db {
 }
 
 pub fn app_data_dir() -> Result<PathBuf, Box<dyn std::error::Error>> {
-    let dir = std::env::var("FOXSTUDY_DATA_DIR")
+    let dir = std::env::var("YTSTUDY_DATA_DIR")
         .map(PathBuf::from)
+        .or_else(|_| std::env::var("FOXSTUDY_DATA_DIR").map(PathBuf::from))
         .unwrap_or_else(|_| default_data_dir());
     Ok(dir)
+}
+
+async fn migrate_legacy_database(new_db_dir: &std::path::Path) -> Result<(), Box<dyn std::error::Error>> {
+    let new_db = new_db_dir.join("ytstudy.db");
+    if tokio::fs::try_exists(&new_db).await? {
+        return Ok(());
+    }
+
+    let old_dir = legacy_data_dir().join("db");
+    let old_db = old_dir.join("foxstudy.db");
+    if !tokio::fs::try_exists(&old_db).await? {
+        return Ok(());
+    }
+
+    // Copy the SQLite database and its WAL file together so the renamed
+    // app keeps all existing data while leaving the old database as backup.
+    let old_wal = old_dir.join("foxstudy.db-wal");
+    if tokio::fs::try_exists(&old_wal).await? {
+        tokio::fs::copy(old_wal, new_db_dir.join("ytstudy.db-wal")).await?;
+    }
+    tokio::fs::copy(&old_db, &new_db).await?;
+    Ok(())
+}
+
+fn legacy_data_dir() -> PathBuf {
+    if let Ok(path) = std::env::var("FOXSTUDY_DATA_DIR") {
+        return PathBuf::from(path);
+    }
+    let base = std::env::var("XDG_DATA_HOME")
+        .map(PathBuf::from)
+        .unwrap_or_else(|_| {
+            let home = std::env::var("HOME").unwrap_or_else(|_| ".".into());
+            PathBuf::from(home).join(".local/share")
+        });
+    base.join("foxstudy")
 }
 
 fn default_data_dir() -> PathBuf {
@@ -136,7 +173,7 @@ fn default_data_dir() -> PathBuf {
             let home = std::env::var("HOME").unwrap_or_else(|_| ".".into());
             PathBuf::from(home).join(".local/share")
         });
-    base.join("foxstudy")
+    base.join("ytstudy")
 }
 
 pub fn today_key() -> String {

@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "FoxStudy",
+  "productName": "YTStudy",
   "version": "0.1.0",
-  "identifier": "com.foxstudy.app",
+  "identifier": "com.ytstudy.app",
   "build": {
     "beforeDevCommand": "pnpm dev",
     "devUrl": "http://localhost:1420",
@@ -13,7 +13,7 @@
     "withGlobalTauri": false,
     "windows": [
       {
-        "title": "FoxStudy",
+        "title": "YTStudy",
         "width": 1360,
         "height": 880,
         "minWidth": 980,

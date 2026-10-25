@@ -1,4 +1,4 @@
-# FoxStudy — feature status
+# YTStudy — feature status
 
 Last updated: 23 October 2026. Tauri 2 + React/Vite, Linux-first.
 Legend: **Done** · **Partial** · **Not started**
@@ -129,7 +129,7 @@ Legend: **Done** · **Partial** · **Not started**
 ```bash
 node_modules/.bin/vite dev --port 1420 --strictPort   # UI (mock in a browser)
 source ~/.cargo/env && cd src-tauri && cargo build    # desktop binary
-./src-tauri/target/debug/foxstudy                      # real app, real SQLite
+./src-tauri/target/debug/ytstudy                      # real app, real SQLite
 ```
 
 AI needs **Settings → AI**: gateway URL (`http://localhost:20128/v1` for a

@@ -1,4 +1,4 @@
--- FoxStudy initial schema
+-- YTStudy initial schema
 -- Rules honored here:
 --  * completion_events is append-only (no UPDATE path, no cascade delete of events)
 --  * scheduled_tasks rows for completed items are never erased by replanning

@@ -1,10 +1,10 @@
 [Desktop Entry]
 Type=Application
-Name=FoxStudy
+Name=YTStudy
 Comment=Desktop study planner with spaced repetition
-Exec=/usr/local/bin/foxstudy
-Icon=foxstudy
+Exec=ytstudy
+Icon=ytstudy
 Terminal=false
 Categories=Education;Office;
 Keywords=study;learning;flashcards;notes;planner;
-StartupWMClass=FoxStudy
+StartupWMClass=YTStudy
