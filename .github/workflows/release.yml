@@ -16,15 +16,9 @@ permissions:
 
 jobs:
   release:
-    if: github.event_name != 'workflow_dispatch' || !inputs.windows_only || matrix.platform == 'windows-latest'
     strategy:
       fail-fast: false
-      matrix:
-        include:
-          - platform: ubuntu-22.04
-            bundles: deb,appimage,rpm
-          - platform: windows-latest
-            bundles: msi,nsis
+      matrix: ${{ fromJSON(github.event_name == 'workflow_dispatch' && inputs.windows_only && '{"include":[{"platform":"windows-latest","bundles":"msi,nsis"}]}' || '{"include":[{"platform":"ubuntu-22.04","bundles":"deb,appimage,rpm"},{"platform":"windows-latest","bundles":"msi,nsis"}]}') }}
     runs-on: ${{ matrix.platform }}
     steps:
       - name: Check out source
