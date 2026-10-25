@@ -1,0 +1,210 @@
+/* ============================================================
+   FoxStudy — motion system
+   Durations + easings as tokens. Motion answers an action or
+   draws the eye; it never gates input. Everything decorative
+   collapses under prefers-reduced-motion.
+   ============================================================ */
+
+:root {
+  --duration-instant: 90ms;
+  --duration-fast: 150ms;
+  --duration-base: 240ms;
+  --duration-slow: 400ms;
+  --duration-lazy: 700ms;
+  --duration-stagger: 45ms;
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-snap: cubic-bezier(0.2, 0.9, 0.1, 1);
+}
+
+/* ---- Entrances ---- */
+.animate-rise {
+  animation: rise var(--duration-slow) var(--ease-out) both;
+}
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(7px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-pop {
+  animation: pop var(--duration-base) var(--ease-spring) both;
+}
+@keyframes pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Stagger helper: children arrive in sequence, 45ms apart.
+   Use on lists; caps at 8 so long lists never crawl. */
+.stagger > * {
+  animation: rise var(--duration-slow) var(--ease-out) both;
+}
+.stagger > *:nth-child(1) { animation-delay: calc(var(--duration-stagger) * 0); }
+.stagger > *:nth-child(2) { animation-delay: calc(var(--duration-stagger) * 1); }
+.stagger > *:nth-child(3) { animation-delay: calc(var(--duration-stagger) * 2); }
+.stagger > *:nth-child(4) { animation-delay: calc(var(--duration-stagger) * 3); }
+.stagger > *:nth-child(5) { animation-delay: calc(var(--duration-stagger) * 4); }
+.stagger > *:nth-child(6) { animation-delay: calc(var(--duration-stagger) * 5); }
+.stagger > *:nth-child(7) { animation-delay: calc(var(--duration-stagger) * 6); }
+.stagger > *:nth-child(n + 8) { animation-delay: calc(var(--duration-stagger) * 7); }
+
+/* ---- Interaction affordances ---- */
+/* Interaction affordances are flat on purpose: a surface answers the pointer
+   with a warmer fill and a stronger hairline, never a lift or a glow. */
+.lift {
+  transition:
+    border-color var(--duration-fast) var(--ease-out),
+    background-color var(--duration-fast) var(--ease-out);
+}
+.lift:hover {
+  border-color: var(--border-strong);
+  background-color: color-mix(in oklab, var(--surface) 60%, var(--surface-2));
+}
+.lift:active {
+  background-color: var(--surface-2);
+  transition-duration: var(--duration-instant);
+}
+
+/* Kept as a no-op so older markup keeps working; nothing sweeps anymore. */
+.sheen {
+  position: relative;
+}
+
+/* Attention pulse, for streaks and live counters */
+.glow-pulse {
+  animation: glow-pulse 2.8s var(--ease-in-out) infinite;
+}
+@keyframes glow-pulse {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 2px transparent);
+    opacity: 0.9;
+  }
+  50% {
+    filter: drop-shadow(0 0 7px var(--accent-glow));
+    opacity: 1;
+  }
+}
+
+/* Flame flicker, used by the streak meter */
+.flicker {
+  animation: flicker 2.2s ease-in-out infinite;
+}
+@keyframes flicker {
+  0%,
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 0.95;
+  }
+  35% {
+    transform: scale(1.06) rotate(-2deg);
+    opacity: 1;
+  }
+  65% {
+    transform: scale(0.98) rotate(1.5deg);
+  }
+}
+
+/* Progress fill: a slow travelling shine, pure CSS so it can never block */
+.bar-shine {
+  position: relative;
+  overflow: hidden;
+}
+.bar-shine::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgb(255 255 255 / 0.28) 45%,
+    transparent 90%
+  );
+  transform: translateX(-100%);
+  animation: bar-shine 2.6s var(--ease-in-out) infinite;
+}
+@keyframes bar-shine {
+  0% {
+    transform: translateX(-100%);
+  }
+  60%,
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* ---- Skeletons ---- */
+.skeleton {
+  border-radius: var(--radius-md);
+  background: linear-gradient(
+    90deg,
+    var(--surface-2) 25%,
+    color-mix(in oklab, var(--surface-2) 70%, var(--text-muted)) 50%,
+    var(--surface-2) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+@keyframes shimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
+/* ---- Page transitions ---- */
+.route-enter {
+  animation: route-in var(--duration-base) var(--ease-out) both;
+}
+@keyframes route-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+    filter: blur(2px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
+}
+
+/* Respect OS-level reduced motion: no travel, no shimmer, keep state changes */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .lift:hover {
+    transform: none;
+  }
+}
+
+/* The app's own "reduce motion" preference (Settings) */
+[data-motion="reduced"] *,
+[data-motion="reduced"] *::before,
+[data-motion="reduced"] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+}

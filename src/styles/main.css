@@ -1,0 +1,83 @@
+@import "tailwindcss";
+@import "./tokens.css";
+@import "./themes.css";
+@import "./motion.css";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Editorial lede: the one place prose leaves the mono interface behind, so a
+   page reads like an introduction instead of another label. Falls back to the
+   system serif when the webfont is unavailable (offline). */
+.lede {
+  font-family: var(--font-prose);
+  font-size: 15.5px;
+  line-height: 1.62;
+  letter-spacing: 0;
+  color: var(--text-secondary);
+  text-wrap: pretty;
+}
+.lede strong,
+.lede em {
+  color: var(--text-primary);
+}
+
+
+/* Map semantic CSS variables into Tailwind utilities */
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-shade: var(--bg-shade);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-surface-hover: var(--surface-hover);
+
+  --color-text: var(--text-primary);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+  --color-text-inverted: var(--text-inverted);
+
+  --color-border: var(--border);
+  --color-border-subtle: var(--border-subtle);
+  --color-border-strong: var(--border-strong);
+  --color-border-focus: var(--border-focus);
+
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-glow: var(--accent-glow);
+  --color-accent-contrast: var(--accent-contrast);
+
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-info: var(--info);
+  --color-info-soft: var(--info-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-streak: var(--streak);
+
+  /* Gruvbox rainbow, for per-playlist identity and charts */
+  --color-gb-red: var(--rainbow-red);
+  --color-gb-orange: var(--rainbow-orange);
+  --color-gb-yellow: var(--rainbow-yellow);
+  --color-gb-green: var(--rainbow-green);
+  --color-gb-aqua: var(--rainbow-aqua);
+  --color-gb-blue: var(--rainbow-blue);
+  --color-gb-purple: var(--rainbow-purple);
+
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
+  --shadow-xl: var(--shadow-xl);
+  --shadow-glow: var(--shadow-glow);
+}

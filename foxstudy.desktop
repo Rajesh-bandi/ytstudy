@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=FoxStudy
+Comment=Desktop study planner with spaced repetition
+Exec=/usr/local/bin/foxstudy
+Icon=foxstudy
+Terminal=false
+Categories=Education;Office;
+Keywords=study;learning;flashcards;notes;planner;
+StartupWMClass=FoxStudy

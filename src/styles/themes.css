@@ -1,0 +1,528 @@
+/* ============================================================
+   FoxStudy — themes
+   `.dark` / `.light` on <html>. Everything below maps the raw
+   Gruvbox palette onto semantic roles, then sets the base
+   document chrome (aura, grain, scrollbars, focus).
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   DARK — warm charcoal, cream type, amber light
+   window #1d2021 · panels #282828 · raised #32302f
+   ------------------------------------------------------------ */
+.dark,
+:root {
+  color-scheme: dark;
+
+  /* Authentic Gruvbox dark: deep charcoal canvas with warm cream type.
+     Surfaces rise through the shade stack with clear separation. */
+  --bg: var(--gb-dark0-hard);
+  --bg-shade: #181818;
+  --surface: var(--gb-dark0);
+  --surface-2: var(--gb-dark0-soft);
+  --surface-3: var(--gb-dark1);
+  --surface-hover: var(--gb-dark1);
+  --overlay: rgb(29 32 33 / 0.92);
+
+  --text-primary: var(--gb-light0-hard);
+  --text-secondary: var(--gb-fg);
+  --text-muted: var(--gb-light4);
+  --text-inverted: var(--gb-dark0-hard);
+
+  --border: var(--gb-dark2);
+  --border-subtle: var(--gb-dark1);
+  --border-strong: var(--gb-dark3);
+  --border-focus: var(--gb-yellow);
+
+  /* Gruvbox yellow as primary accent with orange gradient */
+  --accent: var(--gb-yellow);
+  --accent-strong: var(--gb-orange);
+  --accent-soft: rgb(250 189 47 / 0.12);
+  --accent-glow: rgb(250 189 47 / 0.28);
+  --accent-contrast: var(--gb-dark0-hard);
+
+  --success: var(--gb-green);
+  --success-soft: rgb(184 187 38 / 0.13);
+  --warning: var(--gb-orange);
+  --warning-soft: rgb(254 128 25 / 0.12);
+  --info: var(--gb-blue);
+  --info-soft: rgb(131 165 152 / 0.13);
+  --danger: var(--gb-red);
+  --danger-soft: rgb(251 73 52 / 0.14);
+  --streak: var(--gb-orange);
+
+  --rainbow-red: var(--gb-red);
+  --rainbow-orange: var(--gb-orange);
+  --rainbow-yellow: var(--gb-yellow);
+  --rainbow-green: var(--gb-green);
+  --rainbow-aqua: var(--gb-aqua);
+  --rainbow-blue: var(--gb-blue);
+  --rainbow-purple: var(--gb-purple);
+
+  /* Subtle depth with warm shadows */
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.3), 0 0 0 1px rgb(0 0 0 / 0.1);
+  --shadow-md: 0 2px 4px rgb(0 0 0 / 0.4), 0 0 0 1px rgb(0 0 0 / 0.15);
+  --shadow-lg: 0 4px 8px rgb(0 0 0 / 0.5), 0 0 0 1px rgb(0 0 0 / 0.2);
+  --shadow-xl: 0 8px 16px rgb(0 0 0 / 0.6), 0 0 0 1px rgb(0 0 0 / 0.25);
+  --shadow-glow: 0 0 12px var(--accent-glow), 0 0 0 1px var(--accent);
+
+  --grain-opacity: 0.035;
+  --aura-opacity: 0.7;
+}
+
+/* ------------------------------------------------------------
+   LIGHT — warm ivory, earthy borders, ink-brown type
+   paper #f9f5d7 · cream #fbf1c7 · sand #f2e5bc
+   ------------------------------------------------------------ */
+.light {
+  color-scheme: light;
+
+  /* Warm paper: cream cards on a sandy canvas */
+  --bg: #d5c4a1;
+  --bg-shade: #bdae93;
+  --surface: var(--gb-light0-hard);
+  --surface-2: var(--gb-light0);
+  --surface-3: var(--gb-light1);
+  --surface-hover: var(--gb-light1);
+  --overlay: rgb(60 56 54 / 0.85);
+
+  --text-primary: #1d2021;
+  --text-secondary: var(--gb-dark1);
+  --text-muted: var(--gb-dark3);
+  --text-inverted: var(--gb-light0-hard);
+
+  --border: var(--gb-light3);
+  --border-subtle: var(--gb-light2);
+  --border-strong: var(--gb-light4);
+  --border-focus: var(--gb-orange-deep);
+
+  --accent: var(--gb-orange-deep);
+  --accent-strong: var(--gb-red-deep);
+  --accent-soft: rgb(175 58 3 / 0.12);
+  --accent-glow: rgb(175 58 3 / 0.25);
+  --accent-contrast: var(--gb-light0-hard);
+
+  --success: var(--gb-green-deep);
+  --success-soft: rgb(121 116 14 / 0.11);
+  --warning: var(--gb-orange-deep);
+  --warning-soft: rgb(175 58 3 / 0.12);
+  --info: var(--gb-blue-deep);
+  --info-soft: rgb(7 102 120 / 0.1);
+  --danger: var(--gb-red-deep);
+  --danger-soft: rgb(157 0 6 / 0.1);
+  --streak: var(--gb-orange);
+
+  --rainbow-red: var(--gb-red-deep);
+  --rainbow-orange: var(--gb-orange-deep);
+  --rainbow-yellow: var(--gb-yellow-deep);
+  --rainbow-green: var(--gb-green-deep);
+  --rainbow-aqua: var(--gb-aqua-deep);
+  --rainbow-blue: var(--gb-blue-deep);
+  --rainbow-purple: var(--gb-purple-deep);
+
+  /* Warm paper shadows */
+  --shadow-sm: 0 1px 2px rgb(60 56 54 / 0.08), 0 0 0 1px rgb(60 56 54 / 0.06);
+  --shadow-md: 0 2px 4px rgb(60 56 54 / 0.12), 0 0 0 1px rgb(60 56 54 / 0.08);
+  --shadow-lg: 0 4px 8px rgb(60 56 54 / 0.16), 0 0 0 1px rgb(60 56 54 / 0.1);
+  --shadow-xl: 0 8px 16px rgb(60 56 54 / 0.2), 0 0 0 1px rgb(60 56 54 / 0.12);
+  --shadow-glow: 0 0 12px var(--accent-glow), 0 0 0 1px var(--accent);
+
+  --grain-opacity: 0.04;
+  --aura-opacity: 0.5;
+
+  /* Light-mode inner highlight reads as paper, not plastic */
+  --inset-highlight: inset 0 1px 0 rgb(255 255 255 / 0.6);
+}
+
+/* ============================================================
+   Document chrome
+   ============================================================ */
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  position: relative;
+  background: var(--bg);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow: hidden;
+}
+
+/* Warm aura: amber light spilling in from the top-left, aqua from the far
+   corner. Fixed so the room stays lit while content scrolls. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background: var(--gradient-app);
+  opacity: var(--aura-opacity);
+}
+
+/* A second, very wide wash sits behind the app and only shows through panel
+   gaps — the "lamp behind the desk" effect that gives the shell depth. */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background-image: var(--grain);
+  opacity: var(--grain-opacity);
+  mix-blend-mode: soft-light;
+}
+
+#root {
+  position: relative;
+  z-index: 2;
+}
+
+::selection {
+  background: color-mix(in oklab, var(--accent) 30%, transparent);
+  color: var(--text-primary);
+}
+
+/* Scrollbars tinted to the palette */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+}
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: var(--radius-full);
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in oklab, var(--accent) 55%, var(--border-strong));
+  background-clip: content-box;
+}
+
+/* Focus: accent ring with a soft halo, visible on any surface */
+:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* ---------------------------- prose ---------------------------- */
+/* Generated notes must be comfortable to read even though the rest of
+   the app is monospaced. */
+.md-body {
+  font-family: var(--font-prose);
+  font-size: 14px;
+  line-height: 1.68;
+  color: var(--text-secondary);
+  max-width: 72ch;
+}
+.md-body > * + * {
+  margin-top: 0.85em;
+}
+.md-body h1,
+.md-body h2,
+.md-body h3 {
+  font-family: var(--font-mono);
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+  font-weight: 600;
+}
+.md-body h1 { font-size: 19px; margin-top: 1.4em; }
+.md-body h2 { font-size: 16px; margin-top: 1.5em; }
+.md-body h3 { font-size: 13.5px; margin-top: 1.3em; }
+.md-body h2::before {
+  content: "";
+  display: block;
+  height: 1px;
+  background: var(--border);
+  margin-bottom: 0.7em;
+}
+.md-body strong { color: var(--text-primary); font-weight: 600; }
+.md-body a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
+.md-body ul, .md-body ol { padding-left: 1.3em; }
+.md-body ul { list-style: disc; }
+.md-body ol { list-style: decimal; }
+.md-body li { margin-top: 0.3em; }
+.md-body li::marker { color: var(--text-muted); }
+.md-body code {
+  font-family: var(--font-mono);
+  font-size: 0.86em;
+  background: var(--surface-2);
+  border: 1px solid var(--border-subtle);
+  border-radius: 3px;
+  padding: 0.1em 0.35em;
+  color: var(--accent);
+}
+.md-body pre {
+  background: var(--bg-shade);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.9em 1em;
+  overflow-x: auto;
+  font-size: 12px;
+  line-height: 1.6;
+}
+.md-body pre code {
+  background: none;
+  border: 0;
+  padding: 0;
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+.md-body blockquote {
+  border-left: 2px solid var(--accent);
+  padding-left: 0.9em;
+  color: var(--text-muted);
+  font-style: italic;
+}
+.md-body table {
+  border-collapse: collapse;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  width: 100%;
+}
+.md-body th, .md-body td {
+  border: 1px solid var(--border);
+  padding: 0.4em 0.7em;
+  text-align: left;
+}
+.md-body th { background: var(--surface-2); color: var(--text-primary); }
+.md-body hr { border: 0; border-top: 1px solid var(--border); }
+
+/* ------------------------- mermaid diagrams ------------------------- */
+/* A diagram should read as a live map, not a screenshot: edges drift along
+   their path, nodes sit above the paper. Stops under reduced motion. */
+.md-body .mermaid-figure svg {
+  display: block;
+  margin-inline: auto;
+  max-width: 100%;
+  height: auto;
+}
+.md-body .mermaid-figure :is(.flowchart-link, .edgePath path, .messageLine0) {
+  stroke-dasharray: 5 4;
+  animation: mmd-flow 1.8s linear infinite;
+}
+@keyframes mmd-flow {
+  to {
+    stroke-dashoffset: -18;
+  }
+}
+.md-body .mermaid-figure .node :is(rect, circle, polygon, ellipse) {
+  filter: drop-shadow(0 2px 4px rgb(0 0 0 / 0.38));
+}
+.md-body .mermaid-figure .nodeLabel,
+.md-body .mermaid-figure .edgeLabel {
+  font-family: var(--font-mono) !important;
+  font-size: 11px !important;
+}
+.md-body .mermaid-figure .edgeLabel rect {
+  fill: var(--surface) !important;
+  opacity: 0.9;
+}
+
+/* Chat markdown: tighter than a note, still readable */
+.md-body.md-chat {
+  max-width: none;
+  font-size: 12px;
+  line-height: 1.55;
+}
+.md-body.md-chat > * + * {
+  margin-top: 0.5em;
+}
+.md-body.md-chat h1,
+.md-body.md-chat h2,
+.md-body.md-chat h3 {
+  font-size: 12.5px;
+  margin-top: 0.7em;
+}
+.md-body.md-chat h2::before {
+  display: none;
+}
+.md-body.md-chat ul,
+.md-body.md-chat ol {
+  padding-left: 1.1em;
+}
+.md-body.md-chat li {
+  margin-top: 0.15em;
+}
+.md-body.md-chat pre {
+  padding: 0.6em 0.7em;
+  font-size: 11px;
+}
+
+/* Tabular numerals for every counter in the product */
+.numeric {
+  font-family: var(--font-numeric);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: var(--tracking-numeric);
+  font-feature-settings: "zero" 1;
+}
+
+/* ============================================================
+   Surface recipes
+   Panels are cut from the palette: a flat fill, a hairline
+   border, and a single inner highlight along the top edge so
+   they read as physical cards rather than boxes.
+   ============================================================ */
+
+/* Panels are flat, cut surfaces: one fill, one hairline. No drop shadows —
+   the edge is what separates a card from the canvas. */
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  position: relative;
+}
+
+/* Raised: dialogs, popovers, the active nav pill */
+.panel-raised {
+  background: var(--surface-2);
+  border: 1px solid var(--border-strong);
+}
+
+/* Hero surface: one per screen at most. A hair warmer, with an amber rim so
+   it reads as the primary surface without floating off the canvas. */
+.panel-hero {
+  background:
+    radial-gradient(
+      120% 90% at 0% 0%,
+      color-mix(in oklab, var(--accent) 6%, transparent) 0%,
+      transparent 58%
+    ),
+    var(--surface);
+  border: 1px solid color-mix(in oklab, var(--border-strong) 80%, var(--accent) 20%);
+}
+
+/* Inset: track wells, metric tiles, code-ish blocks — a sunken fill, no glow */
+.panel-well {
+  background: color-mix(in oklab, var(--bg-shade) 70%, var(--surface));
+  border: 1px solid var(--border-subtle);
+}
+
+/* Hairline divider that fades at both ends */
+.hairline {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--border) 12%,
+    var(--border) 88%,
+    transparent
+  );
+}
+
+/* Warm gradient type, reserved for the single hero number per screen */
+.text-warm {
+  background: var(--gradient-accent);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ------------------------------ shell ------------------------------ */
+
+/* Sidebar: a shade darker than the canvas, with a single vertical highlight
+   down its inner edge — the ledger's spine — and amber light pooling at the
+   top, the way a desk lamp falls on a notebook. */
+.shell-sidebar {
+  background:
+    radial-gradient(
+      120% 38% at 0% 0%,
+      color-mix(in oklab, var(--gb-orange) 7%, transparent) 0%,
+      transparent 62%
+    ),
+    linear-gradient(
+      180deg,
+      color-mix(in oklab, var(--bg-shade) 82%, var(--gb-dark0)) 0%,
+      var(--bg-shade) 100%
+    );
+  box-shadow: inset -1px 0 0 var(--border), 1px 0 24px -18px rgb(0 0 0 / 0.55);
+}
+
+/* Top bar: translucent enough that the aura passes underneath, with a
+   bottom hairline that fades at the ends. */
+.shell-header {
+  background: color-mix(in oklab, var(--bg) 76%, transparent);
+  backdrop-filter: blur(6px);
+  box-shadow: inset 0 -1px 0 var(--border);
+  border-bottom: 0;
+}
+
+/* Main canvas: the room the panels sit in. Warm light from the top-left,
+   a cool aqua bounce from the far corner, then a soft vignette — enough
+   colour that the dark shades read as Gruvbox, not as flat charcoal. */
+.shell-canvas {
+  background:
+    radial-gradient(
+      62% 44% at 8% -8%,
+      color-mix(in oklab, var(--gb-orange) 8%, transparent) 0%,
+      transparent 62%
+    ),
+    radial-gradient(
+      54% 42% at 102% 108%,
+      color-mix(in oklab, var(--gb-aqua) 6%, transparent) 0%,
+      transparent 60%
+    ),
+    radial-gradient(
+      120% 80% at 50% 0%,
+      color-mix(in oklab, var(--surface) 34%, transparent) 0%,
+      transparent 56%
+    );
+}
+
+/* Light mode: the top-edge lip must be white paper, not cream-on-cream */
+.light .panel::before {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgb(255 255 255 / 0.7) 22%,
+    rgb(255 255 255 / 0.95) 50%,
+    rgb(255 255 255 / 0.7) 78%,
+    transparent
+  );
+  opacity: 0.55;
+}
+
+/* Light mode: the hairline warms toward sand so a card separates from the
+   canvas without a grey edge. */
+.light .panel {
+  border-color: color-mix(in oklab, var(--border) 68%, var(--gb-light3));
+}
+
+/* Left rail that lights up on hover — marks the row under the pointer */
+.rail {
+  position: relative;
+}
+.rail::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 20%;
+  bottom: 20%;
+  width: 2px;
+  border-radius: var(--radius-full);
+  background: var(--gradient-accent);
+  opacity: 0;
+  transform: scaleY(0.4);
+  transition:
+    opacity var(--duration-fast) var(--ease-out),
+    transform var(--duration-base) var(--ease-spring);
+}
+.rail:hover::before,
+.rail:focus-within::before {
+  opacity: 1;
+  transform: scaleY(1);
+}

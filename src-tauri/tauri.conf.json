@@ -1,0 +1,33 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "FoxStudy",
+  "version": "0.1.0",
+  "identifier": "com.foxstudy.app",
+  "build": {
+    "beforeDevCommand": "pnpm dev",
+    "devUrl": "http://localhost:1420",
+    "beforeBuildCommand": "pnpm build",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "withGlobalTauri": false,
+    "windows": [
+      {
+        "title": "FoxStudy",
+        "width": 1360,
+        "height": 880,
+        "minWidth": 980,
+        "minHeight": 640,
+        "theme": "Dark"
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self'; img-src 'self' https: data: blob:; style-src 'self' 'unsafe-inline'; font-src 'self' data:; media-src 'self' https: blob:; connect-src 'self' https: http://localhost:* http://127.0.0.1:*; frame-src https://www.youtube-nocookie.com https://www.youtube.com; script-src 'self'"
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["deb", "appimage", "rpm"],
+    "icon": ["icons/icon.png"]
+  }
+}
