@@ -2,11 +2,12 @@
 set -euo pipefail
 
 repo_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
-binary="$repo_dir/src-tauri/target/release/ytstudy"
-if [[ ! -x "$binary" ]]; then
-  echo "Release binary not found. Build it first with: cd src-tauri && cargo build --release" >&2
-  exit 1
+if [[ -f "$HOME/.cargo/env" ]]; then
+  # shellcheck disable=SC1091
+  source "$HOME/.cargo/env"
 fi
+cargo build --release --features custom-protocol --manifest-path "$repo_dir/src-tauri/Cargo.toml"
+binary="$repo_dir/src-tauri/target/release/ytstudy"
 
 install -Dm755 "$binary" "$HOME/.local/bin/ytstudy"
 install -Dm644 "$repo_dir/src-tauri/icons/32x32.png" "$HOME/.local/share/icons/hicolor/32x32/apps/ytstudy.png"

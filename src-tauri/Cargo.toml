@@ -21,6 +21,9 @@ reqwest = { version = "0.12", default-features = false, features = ["rustls-tls"
 url = "2"
 thiserror = "2"
 
+[features]
+custom-protocol = ["tauri/custom-protocol"]
+
 [profile.dev]
 incremental = true
 

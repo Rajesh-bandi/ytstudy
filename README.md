@@ -107,10 +107,13 @@ Run the debug executable from the repository root:
 
 The Rust binary, application window, Tauri bundle, desktop launcher, and repository are named YTStudy.
 
-After building, install it for the current Linux user (including its icon and
-desktop launcher) with:
+Build the production Tauri executable with the custom protocol enabled, then
+install it for the current Linux user (including its icon and desktop launcher):
 
 ```bash
+cd src-tauri
+cargo build --release --features custom-protocol
+cd ..
 ./install-omarchy.sh
 ```
 
