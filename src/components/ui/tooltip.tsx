@@ -21,13 +21,13 @@ export function Tooltip({
           side={side}
           sideOffset={6}
           className={cn(
-            "z-[90] rounded-md border border-border bg-surface px-2.5 py-1.5 text-xs text-text-primary shadow-md",
+            "z-[90] rounded-[3px] border border-border-strong bg-surface-2 px-2 py-1 font-mono text-[10.5px] text-text-primary shadow-md",
             "animate-pop",
             className,
           )}
         >
           {content}
-          <TooltipPrimitive.Arrow className="fill-surface" />
+          <TooltipPrimitive.Arrow className="fill-surface-2" />
         </TooltipPrimitive.Content>
       </TooltipPrimitive.Portal>
     </TooltipPrimitive.Root>

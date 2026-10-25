@@ -1,53 +1,51 @@
 /* ============================================================
    YTStudy — themes
-   `.dark` / `.light` on <html>. Everything below maps the raw
-   Gruvbox palette onto semantic roles, then sets the base
-   document chrome (aura, grain, scrollbars, focus).
+   `.dark` / `.light` on <html>. Maps the raw Gruvbox palette onto
+   semantic roles, then sets the document chrome: flat surfaces,
+   hairline rules, quiet scrollbars, a visible focus ring.
    ============================================================ */
 
 /* ------------------------------------------------------------
-   DARK — warm charcoal, cream type, amber light
-   window #1d2021 · panels #282828 · raised #32302f
+   DARK — charcoal desk, cream type, one warm accent
+   canvas #1d2021 · panel #282828 · raised #32302f
    ------------------------------------------------------------ */
 .dark,
 :root {
   color-scheme: dark;
 
-  /* Authentic Gruvbox dark: deep charcoal canvas with warm cream type.
-     Surfaces rise through the shade stack with clear separation. */
   --bg: var(--gb-dark0-hard);
-  --bg-shade: #181818;
+  --bg-shade: #161819;
   --surface: var(--gb-dark0);
   --surface-2: var(--gb-dark0-soft);
   --surface-3: var(--gb-dark1);
   --surface-hover: var(--gb-dark1);
-  --overlay: rgb(29 32 33 / 0.92);
+  --overlay: rgb(20 22 23 / 0.78);
 
   --text-primary: var(--gb-light0-hard);
   --text-secondary: var(--gb-fg);
+  /* #a89984 rather than the dim grey: 10px labels stay legible on #282828 */
   --text-muted: var(--gb-light4);
   --text-inverted: var(--gb-dark0-hard);
 
-  --border: var(--gb-dark2);
-  --border-subtle: var(--gb-dark1);
-  --border-strong: var(--gb-dark3);
+  --border: var(--gb-dark1);
+  --border-subtle: var(--gb-dark0-soft);
+  --border-strong: var(--gb-dark2);
   --border-focus: var(--gb-yellow);
 
-  /* Gruvbox yellow as primary accent with orange gradient */
   --accent: var(--gb-yellow);
   --accent-strong: var(--gb-orange);
-  --accent-soft: rgb(250 189 47 / 0.12);
-  --accent-glow: rgb(250 189 47 / 0.28);
+  --accent-soft: rgb(250 189 47 / 0.1);
+  --accent-glow: rgb(250 189 47 / 0.22);
   --accent-contrast: var(--gb-dark0-hard);
 
   --success: var(--gb-green);
-  --success-soft: rgb(184 187 38 / 0.13);
+  --success-soft: rgb(184 187 38 / 0.11);
   --warning: var(--gb-orange);
-  --warning-soft: rgb(254 128 25 / 0.12);
+  --warning-soft: rgb(254 128 25 / 0.1);
   --info: var(--gb-blue);
-  --info-soft: rgb(131 165 152 / 0.13);
+  --info-soft: rgb(131 165 152 / 0.11);
   --danger: var(--gb-red);
-  --danger-soft: rgb(251 73 52 / 0.14);
+  --danger-soft: rgb(251 73 52 / 0.12);
   --streak: var(--gb-orange);
 
   --rainbow-red: var(--gb-red);
@@ -58,32 +56,27 @@
   --rainbow-blue: var(--gb-blue);
   --rainbow-purple: var(--gb-purple);
 
-  /* Subtle depth with warm shadows */
-  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.3), 0 0 0 1px rgb(0 0 0 / 0.1);
-  --shadow-md: 0 2px 4px rgb(0 0 0 / 0.4), 0 0 0 1px rgb(0 0 0 / 0.15);
-  --shadow-lg: 0 4px 8px rgb(0 0 0 / 0.5), 0 0 0 1px rgb(0 0 0 / 0.2);
-  --shadow-xl: 0 8px 16px rgb(0 0 0 / 0.6), 0 0 0 1px rgb(0 0 0 / 0.25);
-  --shadow-glow: 0 0 12px var(--accent-glow), 0 0 0 1px var(--accent);
-
-  --grain-opacity: 0.035;
-  --aura-opacity: 0.7;
+  --shadow-1: 0 1px 1px rgb(0 0 0 / 0.24);
+  --shadow-2: 0 2px 6px -1px rgb(0 0 0 / 0.36);
+  --shadow-3: 0 10px 24px -10px rgb(0 0 0 / 0.52);
+  --shadow-4: 0 24px 48px -18px rgb(0 0 0 / 0.64);
+  --shadow-glow: 0 0 0 1px var(--accent);
 }
 
 /* ------------------------------------------------------------
-   LIGHT — warm ivory, earthy borders, ink-brown type
-   paper #f9f5d7 · cream #fbf1c7 · sand #f2e5bc
+   LIGHT — warm paper, ink type, burnt-orange accent
+   canvas #ebdbb2 · panel #fbf1c7 · raised #f2e5bc
    ------------------------------------------------------------ */
 .light {
   color-scheme: light;
 
-  /* Warm paper: cream cards on a sandy canvas */
-  --bg: #d5c4a1;
-  --bg-shade: #bdae93;
-  --surface: var(--gb-light0-hard);
-  --surface-2: var(--gb-light0);
-  --surface-3: var(--gb-light1);
-  --surface-hover: var(--gb-light1);
-  --overlay: rgb(60 56 54 / 0.85);
+  --bg: var(--gb-light1);
+  --bg-shade: #e3d3ab;
+  --surface: var(--gb-light0);
+  --surface-2: var(--gb-light0-soft);
+  --surface-3: var(--gb-light2);
+  --surface-hover: var(--gb-light2);
+  --overlay: rgb(60 56 54 / 0.42);
 
   --text-primary: #1d2021;
   --text-secondary: var(--gb-dark1);
@@ -97,19 +90,19 @@
 
   --accent: var(--gb-orange-deep);
   --accent-strong: var(--gb-red-deep);
-  --accent-soft: rgb(175 58 3 / 0.12);
-  --accent-glow: rgb(175 58 3 / 0.25);
+  --accent-soft: rgb(175 58 3 / 0.09);
+  --accent-glow: rgb(175 58 3 / 0.18);
   --accent-contrast: var(--gb-light0-hard);
 
   --success: var(--gb-green-deep);
-  --success-soft: rgb(121 116 14 / 0.11);
+  --success-soft: rgb(121 116 14 / 0.09);
   --warning: var(--gb-orange-deep);
-  --warning-soft: rgb(175 58 3 / 0.12);
+  --warning-soft: rgb(175 58 3 / 0.09);
   --info: var(--gb-blue-deep);
-  --info-soft: rgb(7 102 120 / 0.1);
+  --info-soft: rgb(7 102 120 / 0.08);
   --danger: var(--gb-red-deep);
-  --danger-soft: rgb(157 0 6 / 0.1);
-  --streak: var(--gb-orange);
+  --danger-soft: rgb(157 0 6 / 0.08);
+  --streak: var(--gb-orange-deep);
 
   --rainbow-red: var(--gb-red-deep);
   --rainbow-orange: var(--gb-orange-deep);
@@ -119,18 +112,11 @@
   --rainbow-blue: var(--gb-blue-deep);
   --rainbow-purple: var(--gb-purple-deep);
 
-  /* Warm paper shadows */
-  --shadow-sm: 0 1px 2px rgb(60 56 54 / 0.08), 0 0 0 1px rgb(60 56 54 / 0.06);
-  --shadow-md: 0 2px 4px rgb(60 56 54 / 0.12), 0 0 0 1px rgb(60 56 54 / 0.08);
-  --shadow-lg: 0 4px 8px rgb(60 56 54 / 0.16), 0 0 0 1px rgb(60 56 54 / 0.1);
-  --shadow-xl: 0 8px 16px rgb(60 56 54 / 0.2), 0 0 0 1px rgb(60 56 54 / 0.12);
-  --shadow-glow: 0 0 12px var(--accent-glow), 0 0 0 1px var(--accent);
-
-  --grain-opacity: 0.04;
-  --aura-opacity: 0.5;
-
-  /* Light-mode inner highlight reads as paper, not plastic */
-  --inset-highlight: inset 0 1px 0 rgb(255 255 255 / 0.6);
+  --shadow-1: 0 1px 1px rgb(60 56 54 / 0.06);
+  --shadow-2: 0 2px 6px -1px rgb(60 56 54 / 0.12);
+  --shadow-3: 0 10px 24px -12px rgb(60 56 54 / 0.26);
+  --shadow-4: 0 24px 48px -20px rgb(60 56 54 / 0.32);
+  --shadow-glow: 0 0 0 1px var(--accent);
 }
 
 /* ============================================================
@@ -144,48 +130,18 @@ body,
 }
 
 body {
-  position: relative;
   background: var(--bg);
   color: var(--text-primary);
   font-family: var(--font-sans);
   font-size: var(--text-base);
+  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   overflow: hidden;
 }
 
-/* Warm aura: amber light spilling in from the top-left, aqua from the far
-   corner. Fixed so the room stays lit while content scrolls. */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  background: var(--gradient-app);
-  opacity: var(--aura-opacity);
-}
-
-/* A second, very wide wash sits behind the app and only shows through panel
-   gaps — the "lamp behind the desk" effect that gives the shell depth. */
-body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 1;
-  background-image: var(--grain);
-  opacity: var(--grain-opacity);
-  mix-blend-mode: soft-light;
-}
-
-#root {
-  position: relative;
-  z-index: 2;
-}
-
 ::selection {
-  background: color-mix(in oklab, var(--accent) 30%, transparent);
+  background: color-mix(in oklab, var(--accent) 26%, transparent);
   color: var(--text-primary);
 }
 
@@ -195,8 +151,8 @@ body::after {
   scrollbar-color: var(--border-strong) transparent;
 }
 ::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  width: 9px;
+  height: 9px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
@@ -204,28 +160,39 @@ body::after {
 ::-webkit-scrollbar-thumb {
   background: var(--border-strong);
   border-radius: var(--radius-full);
-  border: 3px solid transparent;
+  border: 2px solid transparent;
   background-clip: content-box;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: color-mix(in oklab, var(--accent) 55%, var(--border-strong));
+  background: color-mix(in oklab, var(--accent) 50%, var(--border-strong));
   background-clip: content-box;
 }
 
-/* Focus: accent ring with a soft halo, visible on any surface */
+/* Focus: one accent ring, visible on any surface */
 :focus-visible {
   outline: 2px solid var(--border-focus);
   outline-offset: 2px;
   border-radius: var(--radius-sm);
 }
 
+/* Micro label: the technical voice, used for section headers and meta rows.
+   Component layer so a `text-[9px]` or `text-accent` utility can still win. */
+@layer components {
+  .micro {
+    font-family: var(--font-label);
+    font-size: 10px;
+    line-height: 1.2;
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+}
+
 /* ---------------------------- prose ---------------------------- */
-/* Generated notes must be comfortable to read even though the rest of
-   the app is monospaced. */
 .md-body {
   font-family: var(--font-prose);
-  font-size: 14px;
-  line-height: 1.68;
+  font-size: 14.5px;
+  line-height: 1.72;
   color: var(--text-secondary);
   max-width: 72ch;
 }
@@ -235,14 +202,14 @@ body::after {
 .md-body h1,
 .md-body h2,
 .md-body h3 {
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   color: var(--text-primary);
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
   line-height: 1.3;
   font-weight: 600;
 }
-.md-body h1 { font-size: 19px; margin-top: 1.4em; }
-.md-body h2 { font-size: 16px; margin-top: 1.5em; }
+.md-body h1 { font-size: 20px; margin-top: 1.4em; }
+.md-body h2 { font-size: 16px; margin-top: 1.6em; }
 .md-body h3 { font-size: 13.5px; margin-top: 1.3em; }
 .md-body h2::before {
   content: "";
@@ -260,17 +227,17 @@ body::after {
 .md-body li::marker { color: var(--text-muted); }
 .md-body code {
   font-family: var(--font-mono);
-  font-size: 0.86em;
+  font-size: 0.84em;
   background: var(--surface-2);
   border: 1px solid var(--border-subtle);
-  border-radius: 3px;
+  border-radius: var(--radius-sm);
   padding: 0.1em 0.35em;
   color: var(--accent);
 }
 .md-body pre {
   background: var(--bg-shade);
   border: 1px solid var(--border);
-  border-radius: 4px;
+  border-radius: var(--radius-md);
   padding: 0.9em 1em;
   overflow-x: auto;
   font-size: 12px;
@@ -321,9 +288,6 @@ body::after {
     stroke-dashoffset: -18;
   }
 }
-.md-body .mermaid-figure .node :is(rect, circle, polygon, ellipse) {
-  filter: drop-shadow(0 2px 4px rgb(0 0 0 / 0.38));
-}
 .md-body .mermaid-figure .nodeLabel,
 .md-body .mermaid-figure .edgeLabel {
   font-family: var(--font-mono) !important;
@@ -337,6 +301,7 @@ body::after {
 /* Chat markdown: tighter than a note, still readable */
 .md-body.md-chat {
   max-width: none;
+  font-family: var(--font-sans);
   font-size: 12px;
   line-height: 1.55;
 }
@@ -365,164 +330,98 @@ body::after {
 }
 
 /* Tabular numerals for every counter in the product */
-.numeric {
-  font-family: var(--font-numeric);
-  font-variant-numeric: tabular-nums;
-  letter-spacing: var(--tracking-numeric);
-  font-feature-settings: "zero" 1;
+@layer components {
+  .numeric {
+    font-family: var(--font-numeric);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: var(--tracking-numeric);
+    font-feature-settings: "zero" 1;
+  }
 }
 
 /* ============================================================
    Surface recipes
-   Panels are cut from the palette: a flat fill, a hairline
-   border, and a single inner highlight along the top edge so
-   they read as physical cards rather than boxes.
+   One fill, one hairline, no drop shadow: the edge is what
+   separates a panel from the canvas.
    ============================================================ */
 
-/* Panels are flat, cut surfaces: one fill, one hairline. No drop shadows —
-   the edge is what separates a card from the canvas. */
-.panel {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  position: relative;
-}
+@layer components {
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    position: relative;
+  }
 
-/* Raised: dialogs, popovers, the active nav pill */
-.panel-raised {
-  background: var(--surface-2);
-  border: 1px solid var(--border-strong);
-}
+  /* Raised: dialogs, popovers, the active companion panel */
+  .panel-raised {
+    background: var(--surface-2);
+    border: 1px solid var(--border-strong);
+  }
 
-/* Hero surface: one per screen at most. A hair warmer, with an amber rim so
-   it reads as the primary surface without floating off the canvas. */
-.panel-hero {
-  background:
-    radial-gradient(
-      120% 90% at 0% 0%,
-      color-mix(in oklab, var(--accent) 6%, transparent) 0%,
-      transparent 58%
-    ),
-    var(--surface);
-  border: 1px solid color-mix(in oklab, var(--border-strong) 80%, var(--accent) 20%);
-}
+  /* Inset: track wells, metric tiles, code blocks — a sunken fill */
+  .panel-well {
+    background: color-mix(in oklab, var(--bg-shade) 62%, var(--surface));
+    border: 1px solid var(--border-subtle);
+  }
 
-/* Inset: track wells, metric tiles, code-ish blocks — a sunken fill, no glow */
-.panel-well {
-  background: color-mix(in oklab, var(--bg-shade) 70%, var(--surface));
-  border: 1px solid var(--border-subtle);
-}
-
-/* Hairline divider that fades at both ends */
-.hairline {
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    var(--border) 12%,
-    var(--border) 88%,
-    transparent
-  );
-}
-
-/* Warm gradient type, reserved for the single hero number per screen */
-.text-warm {
-  background: var(--gradient-accent);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-/* ------------------------------ shell ------------------------------ */
-
-/* Sidebar: a shade darker than the canvas, with a single vertical highlight
-   down its inner edge — the ledger's spine — and amber light pooling at the
-   top, the way a desk lamp falls on a notebook. */
-.shell-sidebar {
-  background:
-    radial-gradient(
-      120% 38% at 0% 0%,
-      color-mix(in oklab, var(--gb-orange) 7%, transparent) 0%,
-      transparent 62%
-    ),
-    linear-gradient(
-      180deg,
-      color-mix(in oklab, var(--bg-shade) 82%, var(--gb-dark0)) 0%,
-      var(--bg-shade) 100%
+  /* Hairline divider that fades at both ends */
+  .hairline {
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      var(--border) 12%,
+      var(--border) 88%,
+      transparent
     );
-  box-shadow: inset -1px 0 0 var(--border), 1px 0 24px -18px rgb(0 0 0 / 0.55);
-}
+  }
 
-/* Top bar: translucent enough that the aura passes underneath, with a
-   bottom hairline that fades at the ends. */
-.shell-header {
-  background: color-mix(in oklab, var(--bg) 76%, transparent);
-  backdrop-filter: blur(6px);
-  box-shadow: inset 0 -1px 0 var(--border);
-  border-bottom: 0;
-}
+  /* The single warm number per screen */
+  .text-warm {
+    color: var(--accent);
+  }
 
-/* Main canvas: the room the panels sit in. Warm light from the top-left,
-   a cool aqua bounce from the far corner, then a soft vignette — enough
-   colour that the dark shades read as Gruvbox, not as flat charcoal. */
-.shell-canvas {
-  background:
-    radial-gradient(
-      62% 44% at 8% -8%,
-      color-mix(in oklab, var(--gb-orange) 8%, transparent) 0%,
-      transparent 62%
-    ),
-    radial-gradient(
-      54% 42% at 102% 108%,
-      color-mix(in oklab, var(--gb-aqua) 6%, transparent) 0%,
-      transparent 60%
-    ),
-    radial-gradient(
-      120% 80% at 50% 0%,
-      color-mix(in oklab, var(--surface) 34%, transparent) 0%,
-      transparent 56%
-    );
-}
+  /* ------------------------------ shell ------------------------------ */
 
-/* Light mode: the top-edge lip must be white paper, not cream-on-cream */
-.light .panel::before {
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgb(255 255 255 / 0.7) 22%,
-    rgb(255 255 255 / 0.95) 50%,
-    rgb(255 255 255 / 0.7) 78%,
-    transparent
-  );
-  opacity: 0.55;
-}
+  /* Sidebar: one shade below the canvas, separated by a hairline. */
+  .shell-sidebar {
+    background: var(--bg-shade);
+    border-right: 1px solid var(--border);
+  }
 
-/* Light mode: the hairline warms toward sand so a card separates from the
-   canvas without a grey edge. */
-.light .panel {
-  border-color: color-mix(in oklab, var(--border) 68%, var(--gb-light3));
-}
+  /* Top bar: a flat strip with a bottom hairline. */
+  .shell-header {
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+  }
 
-/* Left rail that lights up on hover — marks the row under the pointer */
-.rail {
-  position: relative;
-}
-.rail::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 20%;
-  bottom: 20%;
-  width: 2px;
-  border-radius: var(--radius-full);
-  background: var(--gradient-accent);
-  opacity: 0;
-  transform: scaleY(0.4);
-  transition:
-    opacity var(--duration-fast) var(--ease-out),
-    transform var(--duration-base) var(--ease-spring);
-}
-.rail:hover::before,
-.rail:focus-within::before {
-  opacity: 1;
-  transform: scaleY(1);
+  /* Main canvas: plain Gruvbox ground. The surfaces do the talking. */
+  .shell-canvas {
+    background: var(--bg);
+  }
+
+  /* Left rail that marks the row under the pointer */
+  .rail {
+    position: relative;
+  }
+  .rail::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 22%;
+    bottom: 22%;
+    width: 2px;
+    border-radius: var(--radius-full);
+    background: var(--accent);
+    opacity: 0;
+    transform: scaleY(0.5);
+    transition:
+      opacity var(--duration-fast) var(--ease-out),
+      transform var(--duration-base) var(--ease-out);
+  }
+  .rail:hover::before,
+  .rail:focus-within::before {
+    opacity: 1;
+    transform: scaleY(1);
+  }
 }

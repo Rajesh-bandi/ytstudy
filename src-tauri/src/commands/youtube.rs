@@ -18,10 +18,14 @@ pub struct PreviewItem {
     pub position: i64,
 }
 
-/// The public web client key YouTube's own page uses. It is not a user
-/// secret and needs no account; it only lets us call the same browse
-/// endpoint the website calls, which returns clean JSON instead of a page.
-const WEB_KEY: &str = "AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8";
+/// The public web-client key that youtube.com's own web player ships to every
+/// anonymous visitor. It is not an account credential, belongs to YouTube, and
+/// authenticates nothing of the user's: it only addresses the same InnerTube
+/// endpoints the website calls so we receive JSON instead of a rendered page.
+/// It is committed on purpose and must never be treated like a user secret.
+/// If YouTube rotates the key, update it here and in the transcript request in
+/// `crate::ai` (which imports this constant).
+pub(crate) const YOUTUBE_WEB_KEY: &str = "AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8";
 const CLIENT_VERSION: &str = "2.20240726.00.00";
 
 #[command]
@@ -88,7 +92,7 @@ fn context() -> Value {
 
 async fn browse(client: &reqwest::Client, list_id: &str) -> Result<Preview, String> {
     let endpoint = format!(
-        "https://www.youtube.com/youtubei/v1/browse?key={WEB_KEY}&prettyPrint=false"
+        "https://www.youtube.com/youtubei/v1/browse?key={YOUTUBE_WEB_KEY}&prettyPrint=false"
     );
 
     let mut items: Vec<PreviewItem> = Vec::new();

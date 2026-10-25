@@ -212,7 +212,7 @@ export function CompanionDock() {
         aria-expanded={open}
         className={cn(
           "group fixed bottom-5 right-5 z-[var(--z-companion)] flex items-center gap-2 rounded-full",
-          "border border-border-strong bg-surface pl-2 pr-3.5 py-1.5 shadow-[var(--shadow-lg)]",
+          "border border-border-strong bg-surface py-1.5 pl-2 pr-3.5 shadow-lg",
           "transition-colors hover:border-accent/60 hover:bg-surface-2",
         )}
         whileHover={{ y: -2 }}

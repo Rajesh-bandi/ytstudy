@@ -31,7 +31,7 @@ import type {
   Quiz,
   ScheduledTask,
 } from "@/types";
-import { format, parseKey } from "@/lib/date";
+import { format, formatDateKey, parseKey } from "@/lib/date";
 import { TopBar } from "@/components/layout/top-bar";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -84,8 +84,9 @@ export default function Learn() {
     const now = new Date();
     const start = new Date(now.getTime() - 21 * 86400000);
     const end = new Date(now.getTime() + 21 * 86400000);
-    const key = (d: Date) => d.toISOString().slice(0, 10);
-    const range = await api.getRangePlans(key(start), key(end));
+    // Local calendar keys, matching the Rust scheduler — toISOString() would
+    // shift a day for anyone east or west of UTC after midnight.
+    const range = await api.getRangePlans(formatDateKey(start), formatDateKey(end));
     const tasks = [...all, ...range.flatMap((d) => d.tasks)];
     const task = tasks.find((t) => t.item_id === itemId);
     if (task) {
@@ -136,14 +137,20 @@ export default function Learn() {
   useEffect(() => {
     let alive = true;
     void (async () => {
-      const resolved = await resolveItem();
-      if (!alive) return;
-      if (!resolved) {
+      try {
+        const resolved = await resolveItem();
+        if (!alive) return;
+        if (!resolved) {
+          setNotFound(true);
+          return;
+        }
+        setCtx(resolved);
+        await loadArtifacts();
+      } catch (e) {
+        if (!alive) return;
         setNotFound(true);
-        return;
+        toast(`Could not open this lesson: ${e}`, "error");
       }
-      setCtx(resolved);
-      await loadArtifacts();
     })();
     return () => {
       alive = false;
@@ -683,8 +690,8 @@ function DoubtsTab({ itemId, aiReady }: { itemId: string; aiReady: boolean }) {
         {messages.map((m, i) => (
           <div key={i} className={cn("flex gap-2.5", m.role === "user" && "justify-end")}>
             {m.role === "assistant" ? (
-              <span className="mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-[3px] border border-accent/30 bg-accent-soft text-[10px] text-accent">
-                FS
+              <span className="mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-[3px] border border-accent/30 bg-accent-soft text-accent">
+                <Sparkles className="size-3" aria-hidden />
               </span>
             ) : null}
             <div

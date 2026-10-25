@@ -220,7 +220,7 @@ pub async fn worker_tick(db: &Arc<Mutex<Db>>) -> Result<bool, String> {
         return Ok(false);
     };
 
-    let cfg = {
+    let (cfg, prefs) = {
         let guard = db.lock().await;
         sqlx::query("UPDATE jobs SET status = 'running', attempts = attempts + 1, updated_at = ? WHERE id = ?")
             .bind(now_iso())
@@ -228,11 +228,23 @@ pub async fn worker_tick(db: &Arc<Mutex<Db>>) -> Result<bool, String> {
             .execute(&guard.pool)
             .await
             .map_err(|e| e.to_string())?;
-        guard.ai_config().await
+        let cfg = guard.ai_config().await;
+        // Read once per job: a prompt edited while work is queued applies to
+        // the next generation, not the one already in flight.
+        let prefs = guard.settings().await.unwrap_or_default();
+        (cfg, prefs)
     };
 
     // 2. Do the network work with no lock held.
-    let outcome = run_kind(db, &cfg, &kind, item_id.as_deref(), playlist_id.as_deref()).await;
+    let outcome = run_kind(
+        db,
+        &cfg,
+        &prefs,
+        &kind,
+        item_id.as_deref(),
+        playlist_id.as_deref(),
+    )
+    .await;
 
     // 3. Record the result.
     let guard = db.lock().await;
@@ -261,14 +273,15 @@ pub async fn worker_tick(db: &Arc<Mutex<Db>>) -> Result<bool, String> {
 pub async fn run_kind(
     db: &Arc<Mutex<Db>>,
     cfg: &crate::models::AiConfig,
+    prefs: &crate::models::AppSettings,
     kind: &str,
     item_id: Option<&str>,
     playlist_id: Option<&str>,
 ) -> Result<(), String> {
     match kind {
-        "generate_note" => generate_note(db, cfg, item_id).await,
-        "generate_quiz" => generate_quiz(db, cfg, item_id, playlist_id).await,
-        "generate_flashcards" => generate_flashcards(db, cfg, item_id, playlist_id).await,
+        "generate_note" => generate_note(db, cfg, prefs, item_id).await,
+        "generate_quiz" => generate_quiz(db, cfg, prefs, item_id, playlist_id).await,
+        "generate_flashcards" => generate_flashcards(db, cfg, prefs, item_id, playlist_id).await,
         other => Err(format!("Unknown job kind: {other}")),
     }
 }
@@ -276,6 +289,7 @@ pub async fn run_kind(
 async fn generate_note(
     db: &Arc<Mutex<Db>>,
     cfg: &crate::models::AiConfig,
+    prefs: &crate::models::AppSettings,
     item_id: Option<&str>,
 ) -> Result<(), String> {
     let item_id = item_id.ok_or("This job has no lesson attached.")?;
@@ -287,16 +301,7 @@ async fn generate_note(
     let messages = vec![
         ChatMessage {
             role: "system".into(),
-            content: "You write dense, practical study notes in Markdown for a developer. \
-                      Use ## headings, short paragraphs, bullet points, fenced code blocks with \
-                      a language tag, and at least one worked example. Include exactly one \
-                      ```mermaid flowchart (or sequenceDiagram when order matters) that shows how \
-                      the ideas connect — keep node labels short and quote labels with spaces. \
-                      Use a table when comparing options. No preamble, no sign-off. When a video \
-                      transcript is supplied below, treat it as the source of truth: cover what the \
-                      instructor actually teaches, in their order, with their examples. When it is \
-                      absent, teach the topic named in the lesson title."
-                .into(),
+            content: prefs.effective_note_prompt().into(),
         },
         ChatMessage {
             role: "user".into(),
@@ -331,6 +336,7 @@ async fn generate_note(
 async fn generate_quiz(
     db: &Arc<Mutex<Db>>,
     cfg: &crate::models::AiConfig,
+    prefs: &crate::models::AppSettings,
     item_id: Option<&str>,
     playlist_id: Option<&str>,
 ) -> Result<(), String> {
@@ -356,17 +362,18 @@ async fn generate_quiz(
         let messages = vec![
             ChatMessage {
                 role: "system".into(),
-                content: "You write exam-quality multiple-choice questions. Reply with ONLY a \
-                          JSON array. Each element: {\"prompt\": string, \"choices\": [4 \
-                          strings], \"answer\": index of the correct choice, \"why\": \
-                          one-sentence explanation}."
-                    .into(),
+                // The JSON contract is always appended, so a custom prompt can
+                // change emphasis and difficulty without breaking parsing.
+                content: format!(
+                    "{}\n\n{}",
+                    prefs.effective_quiz_prompt(),
+                    crate::prompts::QUIZ_CONTRACT
+                ),
             },
             ChatMessage {
                 role: "user".into(),
                 content: format!(
-                    "Write {count} questions.\n\n{compact}\n\nNotes the learner wrote:\n{notes}\n\n\
-                     Test understanding, not trivia."
+                    "Write {count} questions.\n\n{compact}\n\nNotes the learner wrote:\n{notes}"
                 ),
             },
         ];
@@ -440,6 +447,7 @@ async fn generate_quiz(
 async fn generate_flashcards(
     db: &Arc<Mutex<Db>>,
     cfg: &crate::models::AiConfig,
+    prefs: &crate::models::AppSettings,
     item_id: Option<&str>,
     playlist_id: Option<&str>,
 ) -> Result<(), String> {
@@ -476,9 +484,9 @@ async fn generate_flashcards(
             ChatMessage {
                 role: "system".into(),
                 content: format!(
-                    "You write spaced-repetition flashcards for a developer. Reply with ONLY a \
-                     JSON array of at most {count} objects, each {{\"front\": question, \
-                     \"back\": one-to-two-sentence answer}}. No prose and no code fences."
+                    "{}\n\n{}",
+                    prefs.effective_flashcard_prompt(),
+                    crate::prompts::FLASHCARD_CONTRACT
                 ),
             },
             ChatMessage {

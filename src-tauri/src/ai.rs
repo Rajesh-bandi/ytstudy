@@ -9,6 +9,7 @@ use std::time::Duration;
 
 use sqlx::Row;
 
+use crate::commands::youtube::YOUTUBE_WEB_KEY;
 use crate::db::Db;
 use crate::models::{AiConfig, AiStatus, ChatMessage};
 
@@ -567,8 +568,11 @@ async fn fetch_transcript(client: &reqwest::Client, watch_html: &str) -> Option<
         "params": params
     });
 
+    let endpoint = format!(
+        "https://www.youtube.com/youtubei/v1/get_transcript?key={YOUTUBE_WEB_KEY}&prettyPrint=false"
+    );
     let response = client
-        .post("https://www.youtube.com/youtubei/v1/get_transcript?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8&prettyPrint=false")
+        .post(&endpoint)
         .header("content-type", "application/json")
         .json(&body)
         .send()

@@ -6,6 +6,7 @@ mod db;
 mod jobs;
 mod models;
 mod notes;
+mod prompts;
 mod scheduler;
 
 use std::sync::Arc;
@@ -127,6 +128,7 @@ async fn main_async() {
             commands::stats::get_playlist_progress,
             commands::stats::get_completions_by_day,
             commands::settings::get_settings,
+            commands::settings::get_prompt_defaults,
             commands::settings::set_settings,
             commands::settings::wipe_learning_data,
             commands::notes::list_notes,

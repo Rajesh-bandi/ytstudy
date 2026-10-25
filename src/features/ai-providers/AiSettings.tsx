@@ -81,9 +81,14 @@ export default function AiSettings() {
   };
 
   const save = async () => {
-    await api.setAiConfig(cfg);
-    setSaved(true);
-    toast(cfg.enabled ? "AI settings saved." : "AI is off; saved anyway.", "success");
+    try {
+      await api.setAiConfig(cfg);
+      setSaved(true);
+      toast(cfg.enabled ? "AI settings saved." : "AI is off; saved anyway.", "success");
+    } catch (e) {
+      setResult({ ok: false, text: `Could not save: ${e}` });
+      toast(`Could not save AI settings: ${e}`, "error");
+    }
   };
 
   return (

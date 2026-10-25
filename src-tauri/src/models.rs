@@ -182,6 +182,11 @@ pub struct AppSettings {
     /// What the learner calls the companion, and which character it wears.
     pub companion_name: String,
     pub companion_skin: String,
+    /// Editable instructions per generator. Empty means "use the built-in
+    /// prompt", so older settings files keep working after an upgrade.
+    pub note_prompt: String,
+    pub quiz_prompt: String,
+    pub flashcard_prompt: String,
 }
 
 impl Default for AppSettings {
@@ -191,8 +196,34 @@ impl Default for AppSettings {
             work_dates: (0..7).collect(),
             companion_name: "Meep".into(),
             companion_skin: "meep".into(),
+            note_prompt: String::new(),
+            quiz_prompt: String::new(),
+            flashcard_prompt: String::new(),
         }
     }
+}
+
+impl AppSettings {
+    pub fn effective_note_prompt(&self) -> &str {
+        crate::prompts::or_default(&self.note_prompt, crate::prompts::NOTE_SYSTEM)
+    }
+
+    pub fn effective_quiz_prompt(&self) -> &str {
+        crate::prompts::or_default(&self.quiz_prompt, crate::prompts::QUIZ_SYSTEM)
+    }
+
+    pub fn effective_flashcard_prompt(&self) -> &str {
+        crate::prompts::or_default(&self.flashcard_prompt, crate::prompts::FLASHCARD_SYSTEM)
+    }
+}
+
+/// Shipped prompts, so the UI can offer a real per-field reset instead of
+/// trusting a copy of the text in the frontend bundle.
+#[derive(Debug, Clone, Serialize)]
+pub struct PromptDefaults {
+    pub note: String,
+    pub quiz: String,
+    pub flashcard: String,
 }
 
 /// Matches the payload the UI sends (`taskType`, `dailyTarget`, `orderingPolicy`).

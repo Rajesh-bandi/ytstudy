@@ -5,24 +5,27 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* Editorial lede: the one place prose leaves the mono interface behind, so a
-   page reads like an introduction instead of another label. Falls back to the
-   system serif when the webfont is unavailable (offline). */
-.lede {
-  font-family: var(--font-prose);
-  font-size: 15.5px;
-  line-height: 1.62;
-  letter-spacing: 0;
-  color: var(--text-secondary);
-  text-wrap: pretty;
-}
-.lede strong,
-.lede em {
-  color: var(--text-primary);
+/* Editorial lede: the one place prose leaves the interface behind, so a
+   page reads like an introduction instead of another label. Falls back to
+   the system serif when the bundled face is unavailable (offline). */
+@layer components {
+  .lede {
+    font-family: var(--font-prose);
+    font-size: 15px;
+    line-height: 1.66;
+    letter-spacing: 0;
+    color: var(--text-secondary);
+    text-wrap: pretty;
+  }
+  .lede strong,
+  .lede em {
+    color: var(--text-primary);
+  }
 }
 
-
-/* Map semantic CSS variables into Tailwind utilities */
+/* Map semantic CSS variables into Tailwind utilities. Values are
+   intentionally one hop from the raw tokens (`--font-ui`, `--shadow-1`,
+   literal radii) — a theme block cannot reference the property it defines. */
 @theme inline {
   --color-bg: var(--bg);
   --color-bg-shade: var(--bg-shade);
@@ -67,17 +70,17 @@
   --color-gb-blue: var(--rainbow-blue);
   --color-gb-purple: var(--rainbow-purple);
 
-  --font-sans: var(--font-sans);
-  --font-mono: var(--font-mono);
+  --font-sans: var(--font-ui);
+  --font-mono: var(--font-code);
 
-  --radius-sm: var(--radius-sm);
-  --radius-md: var(--radius-md);
-  --radius-lg: var(--radius-lg);
-  --radius-xl: var(--radius-xl);
+  --radius-sm: 3px;
+  --radius-md: 4px;
+  --radius-lg: 6px;
+  --radius-xl: 10px;
 
-  --shadow-sm: var(--shadow-sm);
-  --shadow-md: var(--shadow-md);
-  --shadow-lg: var(--shadow-lg);
-  --shadow-xl: var(--shadow-xl);
-  --shadow-glow: var(--shadow-glow);
+  --shadow-sm: var(--shadow-1);
+  --shadow-md: var(--shadow-2);
+  --shadow-lg: var(--shadow-3);
+  --shadow-xl: var(--shadow-4);
+  --shadow-glow: 0 0 0 1px var(--accent);
 }

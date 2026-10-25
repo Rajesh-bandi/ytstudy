@@ -10,6 +10,7 @@ const CalendarPage = lazy(() => import("@/features/calendar/CalendarPage"));
 const Progress = lazy(() => import("@/features/analytics/Progress"));
 const Settings = lazy(() => import("@/features/settings/Settings"));
 const AiSettings = lazy(() => import("@/features/ai-providers/AiSettings"));
+const Prompts = lazy(() => import("@/features/settings/Prompts"));
 const Learn = lazy(() => import("@/features/workspace/Learn"));
 const Notes = lazy(() => import("@/features/notes/Notes"));
 const Quizzes = lazy(() => import("@/features/quizzes/Quizzes"));
@@ -112,6 +113,14 @@ export function AppRouter() {
           element={
             <Suspense fallback={<RouteFallback />}>
               <AiSettings />
+            </Suspense>
+          }
+        />
+        <Route
+          path="settings/prompts"
+          element={
+            <Suspense fallback={<RouteFallback />}>
+              <Prompts />
             </Suspense>
           }
         />

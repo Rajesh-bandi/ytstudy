@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import {
   CalendarDays,
+  Command,
   Layers,
   LayoutDashboard,
   ListChecks,
@@ -13,6 +14,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { api, isDesktop } from "@/services/api";
+import { openCompanion } from "@/components/companion/bus";
 
 type Meta = Record<string, string>;
 
@@ -53,14 +55,11 @@ export function AppSidebar() {
         if (!alive) return;
         setMeta({
           today: `${dash.completed_today}/${dash.planned_today}`,
-          planner: "week",
-          calendar: "month",
           playlists: `${playlists.length}`,
           progress: `${dash.streak.current_streak}d`,
           notes: `${notes.length}`,
           quizzes: `${quizzes.length}`,
           cards: `${cards.length}`,
-          settings: "",
         });
       } catch {
         /* the sidebar never blocks the app on a failed stat fetch */
@@ -71,51 +70,70 @@ export function AppSidebar() {
     };
   }, [location.pathname]);
 
+  const doneToday = meta.today !== undefined && meta.today !== "0/0" ? meta.today : null;
+
   return (
     <nav
       aria-label="Primary"
-      className="shell-sidebar flex h-full w-[228px] shrink-0 flex-col"
+      className="shell-sidebar flex h-full w-[236px] shrink-0 flex-col"
     >
-      {/* Identity block, mirroring the reference's project panel */}
+      {/* Identity block */}
       <div className="border-b border-border px-4 py-4">
-        <NavLink to="/" className="group block">
-          <p className="flex items-center gap-2 text-[15px] font-semibold tracking-[-0.02em] text-text-primary">
-            <span
-              aria-hidden
-              className="size-2 rounded-[1px] bg-warning"
-            />
-            YTStudy
-          </p>
-          <p className="mt-0.5 pl-4 text-[10.5px] italic text-text-muted transition-colors group-hover:text-text-secondary">
-            one task at a time
-          </p>
+        <NavLink to="/" className="group flex items-center gap-2.5">
+          <span
+            aria-hidden
+            className="flex size-7 shrink-0 items-center justify-center rounded-[4px] border border-accent/40 bg-accent-soft font-mono text-[11px] font-bold tracking-[-0.04em] text-accent transition-colors group-hover:border-accent/70"
+          >
+            YT
+          </span>
+          <span className="min-w-0">
+            <span className="block truncate text-[14px] font-semibold tracking-[-0.02em] text-text-primary">
+              YTStudy
+            </span>
+            <span className="block truncate font-mono text-[9.5px] uppercase tracking-[0.12em] text-text-muted">
+              one task at a time
+            </span>
+          </span>
         </NavLink>
       </div>
 
-      <div className="flex flex-1 flex-col gap-0.5 overflow-y-auto p-2">
+      <div className="flex flex-1 flex-col gap-0.5 overflow-y-auto px-2 py-3">
+        <p className="micro px-2.5 pb-1.5">Plan</p>
         {primary.map((item) => (
           <Row key={item.to} item={item} meta={meta[item.key]} />
         ))}
 
-        <div className="px-2.5 pb-1 pt-4 text-[10px] uppercase tracking-[0.16em] text-text-muted/70">
-          Study
-        </div>
+        <p className="micro px-2.5 pb-1.5 pt-4">Study</p>
         {tools.map((item) => (
           <Row key={item.to} item={item} meta={meta[item.key]} />
         ))}
       </div>
 
-      {/* Footer: the one number worth keeping in sight */}
+      {/* Footer: the two facts worth keeping in sight */}
       <div className="border-t border-border px-4 py-3">
-        <div className="flex items-baseline justify-between">
-          <span className="text-[10px] uppercase tracking-[0.14em] text-text-muted">streak</span>
-          <span className="numeric text-[13px] text-accent">{meta.progress ?? "—"}</span>
+        <div className="flex items-baseline justify-between gap-2">
+          <span className="micro">streak</span>
+          <span className="numeric text-[13px] font-medium text-accent">
+            {meta.progress ?? "—"}
+          </span>
         </div>
-        <p className="mt-1 text-[10.5px] leading-relaxed text-text-muted/80">
-          {meta.today ? `${meta.today} done today` : "loading day…"}
+        <p className="mt-1 font-mono text-[10px] text-text-muted">
+          {doneToday ? `${doneToday} done today` : "loading day…"}
         </p>
+
+        <button
+          onClick={openCompanion}
+          className="mt-2.5 flex w-full items-center justify-between gap-2 rounded-[3px] border border-border px-2 py-1.5 text-[10.5px] text-text-muted transition-colors hover:border-border-strong hover:bg-surface-2/60 hover:text-text-secondary"
+        >
+          <span className="flex items-center gap-1.5">
+            <Command className="size-3" aria-hidden />
+            Companion
+          </span>
+          <span className="numeric text-[9.5px] opacity-70">⌘J</span>
+        </button>
+
         {!isDesktop ? (
-          <p className="mt-1 text-[9.5px] uppercase tracking-[0.12em] text-warning/80">
+          <p className="mt-2 font-mono text-[9px] uppercase tracking-[0.12em] text-warning/80">
             preview · demo data
           </p>
         ) : null}
@@ -139,10 +157,10 @@ function Row({
       className={({ isActive }) =>
         cn(
           "group relative flex items-center justify-between gap-2 rounded-[3px] px-2.5 py-[7px]",
-          "text-[12.5px] transition-colors duration-[var(--duration-fast)]",
+          "text-[12.5px] transition-colors duration-(--duration-fast)",
           isActive
             ? "bg-surface-2 text-text-primary"
-            : "text-text-secondary hover:bg-surface-2/60 hover:text-text-primary",
+            : "text-text-secondary hover:bg-surface-2/55 hover:text-text-primary",
         )
       }
     >
@@ -151,14 +169,14 @@ function Row({
           <span
             aria-hidden
             className={cn(
-              "absolute left-0 top-1.5 bottom-1.5 w-px rounded-full transition-colors",
+              "absolute left-0 top-1.5 bottom-1.5 w-[2px] rounded-full transition-colors",
               isActive ? "bg-accent" : "bg-transparent",
             )}
           />
           <span className="flex min-w-0 items-center gap-2.5">
             <Icon
               className={cn(
-                "size-[13px] shrink-0",
+                "size-[14px] shrink-0 transition-colors",
                 isActive ? "text-accent" : "text-text-muted group-hover:text-text-secondary",
               )}
               aria-hidden
@@ -166,7 +184,7 @@ function Row({
             <span className="truncate">{item.label}</span>
           </span>
           {meta ? (
-            <span className="numeric shrink-0 text-[10.5px] text-text-muted/80">{meta}</span>
+            <span className="numeric shrink-0 text-[10px] text-text-muted">{meta}</span>
           ) : null}
         </>
       )}

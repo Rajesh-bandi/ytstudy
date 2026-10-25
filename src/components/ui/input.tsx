@@ -1,20 +1,23 @@
-import { forwardRef, type InputHTMLAttributes, type LabelHTMLAttributes, type ReactNode, type SelectHTMLAttributes, type TextareaHTMLAttributes } from "react";
+import {
+  forwardRef,
+  type InputHTMLAttributes,
+  type LabelHTMLAttributes,
+  type ReactNode,
+  type SelectHTMLAttributes,
+  type TextareaHTMLAttributes,
+} from "react";
 import { cn } from "@/lib/utils";
+
+const field =
+  "w-full rounded-[4px] border border-border bg-surface px-3 text-sm text-text-primary " +
+  "placeholder:text-text-muted transition-colors duration-(--duration-fast) " +
+  "hover:border-border-strong " +
+  "focus:border-accent focus:outline-none focus:shadow-[0_0_0_3px_var(--accent-soft)] " +
+  "disabled:opacity-50";
 
 export const Input = forwardRef<HTMLInputElement, InputHTMLAttributes<HTMLInputElement>>(
   ({ className, ...props }, ref) => (
-    <input
-      ref={ref}
-      className={cn(
-        "h-9 w-full rounded-[4px] border border-border bg-bg px-3 text-sm text-text-primary placeholder:text-text-muted",
-        "shadow-sm transition-all duration-[--duration-fast]",
-        "hover:border-border-strong hover:bg-surface",
-        "focus:border-accent focus:bg-surface focus:shadow-glow",
-        "focus:outline-none focus-visible:outline-none",
-        className,
-      )}
-      {...props}
-    />
+    <input ref={ref} className={cn(field, "h-9", className)} {...props} />
   ),
 );
 Input.displayName = "Input";
@@ -23,14 +26,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaHTMLAttributes<H
   ({ className, ...props }, ref) => (
     <textarea
       ref={ref}
-      className={cn(
-        "w-full rounded-[4px] border border-border bg-bg px-3 py-2 text-sm text-text-primary placeholder:text-text-muted",
-        "shadow-sm transition-all duration-[--duration-fast]",
-        "hover:border-border-strong hover:bg-surface",
-        "focus:border-accent focus:bg-surface focus:shadow-glow",
-        "min-h-[72px] resize-y",
-        className,
-      )}
+      className={cn(field, "min-h-[72px] resize-y py-2", className)}
       {...props}
     />
   ),
@@ -41,14 +37,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectHTMLAttributes<HTMLSel
   ({ className, children, ...props }, ref) => (
     <select
       ref={ref}
-      className={cn(
-        "h-9 rounded-[4px] border border-border bg-bg px-2.5 text-sm text-text-primary",
-        "shadow-sm transition-all duration-[--duration-fast]",
-        "hover:border-border-strong hover:bg-surface",
-        "focus:border-accent focus:bg-surface focus:shadow-glow",
-        "*:bg-surface",
-        className,
-      )}
+      className={cn(field, "h-9 cursor-pointer px-2.5 *:bg-surface *:text-text-primary", className)}
       {...props}
     >
       {children}
@@ -58,12 +47,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectHTMLAttributes<HTMLSel
 Select.displayName = "Select";
 
 export function Label({ className, ...props }: LabelHTMLAttributes<HTMLLabelElement>) {
-  return (
-    <label
-      className={cn("text-xs font-medium uppercase tracking-wider text-text-muted", className)}
-      {...props}
-    />
-  );
+  return <label className={cn("micro", className)} {...props} />;
 }
 
 export function Field({

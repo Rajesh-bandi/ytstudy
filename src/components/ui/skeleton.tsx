@@ -8,13 +8,13 @@ export function Skeleton({ className }: { className?: string }) {
 /** Standard skeleton for card lists while day/dashboard data loads. */
 export function TaskListSkeleton({ rows = 4 }: { rows?: number }) {
   return (
-    <div aria-busy="true" aria-label="Loading tasks" className="flex flex-col gap-2.5">
+    <div aria-busy="true" aria-label="Loading tasks" className="flex flex-col gap-2">
       {Array.from({ length: rows }).map((_, i) => (
         <div
           key={i}
-          className="flex items-center gap-3 rounded-lg border border-border bg-surface px-4 py-3"
+          className="flex items-center gap-3 rounded-md border border-border-subtle bg-surface px-4 py-3"
         >
-          <Skeleton className="size-5 rounded-md" />
+          <Skeleton className="size-4 rounded-[3px]" />
           <div className="flex flex-1 flex-col gap-1.5">
             <Skeleton className="h-3 w-1/2" />
             <Skeleton className="h-2 w-1/4" />
@@ -37,8 +37,8 @@ export function EmptyState({
   action?: ReactNode;
 }) {
   return (
-    <div className="flex flex-col items-center justify-center gap-2.5 rounded-lg border border-dashed border-border bg-surface px-8 py-12 text-center">
-      <div className="text-text-muted [&_svg]:size-7">{icon}</div>
+    <div className="flex flex-col items-center justify-center gap-3 rounded-lg border border-dashed border-border px-8 py-12 text-center">
+      <div className="text-text-muted [&_svg]:size-6">{icon}</div>
       <div className="flex flex-col gap-1">
         <p className="text-sm font-medium text-text-primary">{title}</p>
         {description ? (

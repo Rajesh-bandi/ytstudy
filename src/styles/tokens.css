@@ -4,8 +4,8 @@
    variants per shade, plus the bright/dark accent pairs.
 
    Rule: screens never hard-code a colour. They consume the
-   semantic tokens declared at the bottom of this file, which
-   themes.css maps per theme.
+   semantic tokens declared in themes.css, which maps the raw
+   palette per theme.
    ============================================================ */
 
 :root {
@@ -61,20 +61,18 @@
   --gb-orange-deep: #af3a03;
 
   /* ============================================================
-     Structure scales
+     Structure
      ============================================================ */
 
-  /* ---- Radii: tight and deliberate; this is a tool, not a toy.
-     Gruvbox sits closer to a terminal than a SaaS dashboard, so corners
-     stay near-square and only pills are fully round. ---- */
+  /* Corners stay near-square: this is a study desk, not a dashboard. */
   --radius-xs: 2px;
   --radius-sm: 3px;
   --radius-md: 4px;
   --radius-lg: 6px;
-  --radius-xl: 9px;
+  --radius-xl: 10px;
   --radius-full: 9999px;
 
-  /* ---- Spacing rhythm (4px base) ---- */
+  /* Spacing rhythm (4px base) */
   --space-1: 0.25rem;
   --space-2: 0.5rem;
   --space-3: 0.75rem;
@@ -84,11 +82,16 @@
   --space-8: 2rem;
 
   /* ---- Typography ---- */
-  /* The interface speaks in mono: it is a study tool, closer to an editor
-     than to a dashboard. Long-form prose (notes) gets the sans face. */
-  --font-sans: "JetBrains Mono Variable", "JetBrains Mono", "IBM Plex Mono", ui-monospace, monospace;
-  --font-mono: "JetBrains Mono Variable", "JetBrains Mono", "IBM Plex Mono", ui-monospace, monospace;
-  --font-prose: "Source Serif 4", "Source Serif Pro", Charter, "Iowan Old Style", Georgia, "Noto Serif", serif;
+  /* Two voices only: a humanist sans carries the interface and prose, and a
+     mono face carries labels, counts, code and anything you scan rather than
+     read. Both are bundled with the app — no network request, no CSP fight. */
+  --font-ui: "IBM Plex Sans Variable", "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-code: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, monospace;
+  --font-prose: Charter, "Iowan Old Style", Georgia, "Noto Serif", "Liberation Serif", serif;
+
+  /* Aliases for stylesheets that read the stacks directly. */
+  --font-sans: var(--font-ui);
+  --font-mono: var(--font-code);
 
   --text-2xs: 0.6875rem;
   --text-xs: 0.75rem;
@@ -103,81 +106,23 @@
   --font-numeric: var(--font-mono);
   --tracking-numeric: -0.02em;
 
-  /* ---- Elevation: a warm umber shadow, never neutral black.
-     Each level pairs a tight contact shadow with a wide ambient one, so
-     surfaces read as lit from above rather than smeared with grey. ---- */
-  --elevation-1:
-    0 1px 1px rgb(0 0 0 / 0.42), 0 2px 4px -1px rgb(0 0 0 / 0.28),
-    inset 0 1px 0 rgb(251 241 199 / 0.045);
-  --elevation-2:
-    0 1px 2px rgb(0 0 0 / 0.46), 0 6px 14px -4px rgb(0 0 0 / 0.42),
-    inset 0 1px 0 rgb(251 241 199 / 0.05);
-  --elevation-3:
-    0 2px 3px rgb(0 0 0 / 0.44), 0 14px 28px -8px rgb(0 0 0 / 0.52),
-    inset 0 1px 0 rgb(251 241 199 / 0.06);
-  --elevation-4:
-    0 3px 6px rgb(0 0 0 / 0.46), 0 30px 60px -18px rgb(0 0 0 / 0.66),
-    inset 0 1px 0 rgb(251 241 199 / 0.07);
+  /* Labels are small, wide-tracked mono — the technical voice of the app. */
+  --font-label: var(--font-mono);
+  --tracking-label: 0.14em;
 
-  /* Inner top light: makes flat panels read as physical surfaces */
-  --inset-highlight: inset 0 1px 0 rgb(255 255 255 / 0.05);
-  --inset-sheen: inset 0 1px 0 rgb(255 255 255 / 0.07), inset 0 -1px 0 rgb(0 0 0 / 0.18);
-  --inset-well: inset 0 2px 6px rgb(0 0 0 / 0.28), inset 0 0 0 1px rgb(0 0 0 / 0.12);
+  /* ---- Elevation: one warm shadow, used only for things that actually
+     float (dialogs, popovers, the companion). Cards stay on the desk. ---- */
+  --shadow-1: 0 1px 1px rgb(0 0 0 / 0.24);
+  --shadow-2: 0 2px 6px -1px rgb(0 0 0 / 0.34);
+  --shadow-3: 0 10px 24px -10px rgb(0 0 0 / 0.5);
+  --shadow-4: 0 24px 48px -18px rgb(0 0 0 / 0.62);
 
-  /* ---- Glows for focus + celebratory states ---- */
-  --glow-accent: 0 0 0 1px color-mix(in oklab, var(--accent) 45%, transparent),
-    0 0 20px -2px color-mix(in oklab, var(--accent) 32%, transparent);
-  --glow-success: 0 0 0 1px color-mix(in oklab, var(--success) 40%, transparent),
-    0 0 18px -2px color-mix(in oklab, var(--success) 30%, transparent);
-  --glow-danger: 0 0 0 1px color-mix(in oklab, var(--danger) 40%, transparent),
-    0 0 18px -2px color-mix(in oklab, var(--danger) 28%, transparent);
+  /* Focus halo: a soft amber ring, never a glow on the surface itself. */
+  --glow-accent: 0 0 0 1px color-mix(in oklab, var(--accent) 40%, transparent);
+  --glow-success: 0 0 0 1px color-mix(in oklab, var(--success) 36%, transparent);
+  --glow-danger: 0 0 0 1px color-mix(in oklab, var(--danger) 36%, transparent);
 
-  /* ---- Gradients: the "warm light" of the app ---- */
   --gradient-accent: linear-gradient(180deg, var(--accent) 0%, var(--accent-strong) 100%);
-  --gradient-streak: linear-gradient(100deg, var(--gb-orange) 0%, var(--gb-red) 100%);
-  --gradient-sheen: linear-gradient(
-    100deg,
-    transparent 20%,
-    color-mix(in oklab, var(--accent) 22%, transparent) 45%,
-    transparent 70%
-  );
-  /* Two corner washes — warm amber from the top left, cool aqua from the
-     bottom right. That warm/cool pairing is what stops Gruvbox panels from
-     reading as flat grey boxes. */
-  --gradient-app:
-    radial-gradient(
-      80% 62% at 6% -14%,
-      color-mix(in oklab, var(--gb-orange) 9%, transparent) 0%,
-      transparent 62%
-    ),
-    radial-gradient(
-      65% 58% at 104% 108%,
-      color-mix(in oklab, var(--gb-aqua) 6%, transparent) 0%,
-      transparent 60%
-    ),
-    radial-gradient(
-      60% 40% at 50% -28%,
-      color-mix(in oklab, var(--gb-yellow) 4%, transparent) 0%,
-      transparent 70%
-    );
-
-  /* Panel fills: a faint vertical gradient, brighter at the top edge, which
-     simulates light falling across a raised surface. */
-  --gradient-panel: linear-gradient(
-    180deg,
-    color-mix(in oklab, var(--surface-2) 62%, var(--surface)) 0%,
-    var(--surface) 46%,
-    color-mix(in oklab, var(--surface) 92%, var(--bg-shade)) 100%
-  );
-  --gradient-raised: linear-gradient(
-    180deg,
-    var(--surface-3) 0%,
-    var(--surface-2) 60%
-  );
-
-  /* ---- Grain: a hint of paper texture over flat fills ---- */
-  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.42'/%3E%3C/svg%3E");
-  --grain-opacity: 0.045;
 
   /* ---- Z-index ladder ---- */
   --z-base: 0;

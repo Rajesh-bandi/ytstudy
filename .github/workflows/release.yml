@@ -5,11 +5,16 @@ on:
     tags: ["v*"]
   workflow_dispatch:
     inputs:
+      version:
+        description: Release tag to build and publish (for example v0.1.0)
+        type: string
+        required: true
+        default: v0.1.0
       windows_only:
         description: Build only Windows installers for an existing release
         type: boolean
         required: true
-        default: true
+        default: false
 
 permissions:
   contents: write
@@ -64,8 +69,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tauriScript: pnpm tauri
-          tagName: ${{ github.ref_name }}
-          releaseName: YTStudy ${{ github.ref_name }}
+          tagName: ${{ inputs.version || github.ref_name }}
+          releaseName: YTStudy ${{ inputs.version || github.ref_name }}
           releaseBody: >-
             YTStudy installers for Linux (DEB, AppImage, RPM) and Windows (MSI,
             NSIS setup executable).

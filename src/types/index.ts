@@ -114,6 +114,10 @@ export interface AppSettings {
   work_dates: number[]; // 0=Sunday..6=Saturday; -1 = every day
   companion_name: string;
   companion_skin: CompanionSkin;
+  /** Empty means "use the shipped prompt" for that generator. */
+  note_prompt: string;
+  quiz_prompt: string;
+  flashcard_prompt: string;
 }
 
 export const DEFAULT_SETTINGS: AppSettings = {
@@ -121,7 +125,18 @@ export const DEFAULT_SETTINGS: AppSettings = {
   work_dates: [0, 1, 2, 3, 4, 5, 6],
   companion_name: "Meep",
   companion_skin: "meep",
+  note_prompt: "",
+  quiz_prompt: "",
+  flashcard_prompt: "",
 };
+
+/** Text of the prompts shipped with the app, used by Reset and by the
+ *  browser preview (the desktop build reads the same text from Rust). */
+export interface PromptDefaults {
+  note: string;
+  quiz: string;
+  flashcard: string;
+}
 
 export interface PlanOrderResult {
   moved: number;

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { Layers } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
+import { Layers, RotateCcw } from "lucide-react";
 import { api } from "@/services/api";
 import type { Flashcard } from "@/types";
 import { TopBar } from "@/components/layout/top-bar";
@@ -26,8 +27,8 @@ export default function Flashcards() {
       list.push(c);
       map.set(c.deck, list);
     }
-    // Cards never reviewed float to the top of their deck.
-    for (const [, list] of map) list.sort((a, b) => a.reviews - b.reviews);
+    // Keep the deck in creation order: re-sorting on every review makes the
+    // card you just answered jump under the next one.
     return [...map.entries()];
   }, [cards]);
 
@@ -79,22 +80,42 @@ export default function Flashcards() {
             <div className="flex flex-col gap-4">
               <button
                 onClick={() => setFlipped((f) => !f)}
-                className="flex min-h-[240px] w-full flex-col items-center justify-center gap-3 rounded-[4px] border border-border bg-surface p-8 text-center transition-colors hover:border-border-strong"
+                className="relative flex min-h-[240px] w-full flex-col items-center justify-center gap-3 overflow-hidden rounded-lg border border-border bg-surface p-8 text-center transition-colors hover:border-border-strong"
+                style={{ perspective: 900 }}
               >
-                <span className="text-[10px] uppercase tracking-[0.16em] text-text-muted">
+                <span className="micro flex items-center gap-1.5 text-[9px]">
                   {flipped ? "answer" : "question"}
+                  <span className="text-text-muted/60">· {position + 1}/{deckSize}</span>
                 </span>
-                <span className="max-w-[52ch] text-[15px] leading-relaxed text-text-primary">
-                  {flipped ? activeCard.back : activeCard.front}
-                </span>
+                <AnimatePresence mode="wait" initial={false}>
+                  <motion.span
+                    key={flipped ? "back" : "front"}
+                    initial={{ opacity: 0, rotateX: -10, y: 6 }}
+                    animate={{ opacity: 1, rotateX: 0, y: 0 }}
+                    exit={{ opacity: 0, rotateX: 8, y: -4 }}
+                    transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                    className="max-w-[52ch] text-[15px] leading-relaxed text-text-primary"
+                  >
+                    {flipped ? activeCard.back : activeCard.front}
+                  </motion.span>
+                </AnimatePresence>
                 <span className="text-[10px] text-text-muted">
                   click to flip · reviewed {activeCard.reviews}×
                 </span>
               </button>
 
               <div className="flex flex-wrap items-center justify-between gap-3">
-                <span className="numeric text-[10.5px] text-text-muted">
-                  {position + 1}/{deckSize}
+                <span className="flex items-center gap-2 font-mono text-[10px] text-text-muted">
+                  card {position + 1} of {deckSize}
+                  <button
+                    onClick={() => {
+                      setFlipped(false);
+                      setIndex(0);
+                    }}
+                    className="inline-flex items-center gap-1 text-text-muted transition-colors hover:text-accent"
+                  >
+                    <RotateCcw className="size-2.5" aria-hidden /> restart
+                  </button>
                 </span>
                 <div className="flex gap-1.5">
                   {[
@@ -108,10 +129,25 @@ export default function Flashcards() {
                       size="sm"
                       variant={key === "good" ? "primary" : "secondary"}
                       onClick={async () => {
-                        await api.reviewFlashcard(activeCard.id, key as "again" | "hard" | "good" | "easy");
+                        await api.reviewFlashcard(
+                          activeCard.id,
+                          key as "again" | "hard" | "good" | "easy",
+                        );
+                        // Update locally instead of re-fetching: the deck must
+                        // not reshuffle under the reviewer's finger.
+                        setCards((prev) =>
+                          (prev ?? []).map((c) =>
+                            c.id === activeCard.id
+                              ? {
+                                  ...c,
+                                  reviews: c.reviews + 1,
+                                  last_reviewed: new Date().toISOString(),
+                                }
+                              : c,
+                          ),
+                        );
                         setFlipped(false);
                         setIndex(deckSize > 0 ? (position + 1) % deckSize : 0);
-                        await reload();
                       }}
                     >
                       {label}

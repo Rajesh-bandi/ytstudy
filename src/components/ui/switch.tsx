@@ -21,14 +21,15 @@ export function Switch({
       defaultChecked={defaultChecked}
       aria-label={ariaLabel}
       className={cn(
-        "inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full border border-border transition-colors duration-[--duration-fast]",
-        "data-[state=checked]:bg-accent data-[state=checked]:border-transparent data-[state=unchecked]:bg-surface-hover",
+        "inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full border transition-colors duration-(--duration-fast)",
+        "data-[state=checked]:border-accent data-[state=checked]:bg-accent",
+        "data-[state=unchecked]:border-border-strong data-[state=unchecked]:bg-surface-3",
         className,
       )}
     >
       <SwitchPrimitive.Thumb
         className={cn(
-          "block size-3.5 translate-x-0.5 rounded-full bg-text-primary shadow-sm transition-transform duration-[--duration-fast] ease-[--ease-spring]",
+          "block size-3.5 translate-x-0.5 rounded-full bg-text-inverted transition-transform duration-(--duration-fast) ease-(--ease-out)",
           "data-[state=checked]:translate-x-[18px] data-[state=checked]:bg-accent-contrast",
         )}
       />

@@ -1,10 +1,17 @@
 use super::playlists::SharedDb;
-use crate::models::AppSettings;
+use crate::models::{AppSettings, PromptDefaults};
 
 #[tauri::command]
 pub async fn get_settings(state: SharedDb<'_>) -> Result<AppSettings, String> {
     let db = state.lock().await;
     db.settings().await.map_err(|e| e.to_string())
+}
+
+/// The shipped prompts. Resetting a field in the UI restores the text the
+/// backend would actually fall back to, rather than a stale frontend copy.
+#[tauri::command]
+pub fn get_prompt_defaults() -> PromptDefaults {
+    crate::prompts::defaults()
 }
 
 /// Accepts a partial patch and merges it over what is stored, so changing one

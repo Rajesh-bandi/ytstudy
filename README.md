@@ -155,8 +155,18 @@ Without a provider, the local companion can still answer basic progress question
 - YouTube playback is embedded. Other lesson URLs open in the system browser.
 - Caption and metadata context uses the installed `yt-dlp` executable when available. If captions are unavailable, lesson assistance can fall back to available metadata and the user's notes.
 - AI requests are sent to the endpoint configured by the user when AI features are invoked. Review that provider's privacy and retention practices before sending study material.
+- The interface fonts (IBM Plex Sans and JetBrains Mono) are bundled with the app. The webview makes no font requests to Google or any other CDN, and the Tauri CSP does not permit external stylesheets.
+
+### YouTube playback, imports, and keys
+
+- Lessons play in an embedded `youtube-nocookie.com` player. Playback itself uses no API key.
+- Playlist import and transcript retrieval call YouTube's public InnerTube endpoints with the same anonymous web-client key that youtube.com serves to every visitor. It is YouTube's key, not a credential tied to your account, and is intentionally committed in `src-tauri/src/commands/youtube.rs` as `YOUTUBE_WEB_KEY`. It needs no protection and cannot be rotated or revoked by this project; if YouTube changes it, update that one constant. No YouTube Data API v3 project, OAuth client, or personal API key is involved.
+- Your AI provider key is handled separately: enter it in **Settings → AI**, where it is stored only in the local SQLite database. It is never committed — `.env` files and SQLite files are ignored by Git — and it is sent only as a bearer token to the gateway you configured.
+- Uninstalling the app does not revoke a provider key. If the machine is shared or the key was exposed elsewhere, rotate it with the provider.
 
 ## Known limitations
+
+- The bundled YouTube web-client key is public but unofficial; a YouTube-side change can break imports or transcript context until the constant is updated.
 
 - YouTube imports can be partial; anonymous playlist retrieval and RSS fallback have item limits.
 - Captions depend on `yt-dlp` and on captions being available for the video.

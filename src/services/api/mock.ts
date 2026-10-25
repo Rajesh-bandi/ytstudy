@@ -17,6 +17,7 @@ import type {
   StreakStats,
 } from "@/types";
 import { DEFAULT_AI_CONFIG, DEFAULT_SETTINGS } from "@/types";
+import { DEFAULT_PROMPTS } from "@/lib/prompts";
 import { addDays, formatDateKey, today } from "@/lib/date";
 
 const COLORS = ["#d65d0e", "#b16286", "#458588", "#98971a", "#d79921", "#689d6a"];
@@ -333,7 +334,21 @@ export async function mockInvoke(cmd: string, args?: Record<string, unknown>): P
 
     case "reorder_item": {
       const it = db.items.find((i) => i.id === args?.itemId);
-      if (it) it.position = Number(args?.newPosition ?? it.position);
+      if (!it) return null;
+      // Same contract as the Rust `move_item`: splice and repack the whole
+      // sibling list so positions never collide.
+      const siblings = db.items
+        .filter((i) => i.playlist_id === it.playlist_id)
+        .sort((a, b) => a.position - b.position);
+      const from = siblings.indexOf(it);
+      const to = Math.max(0, Math.min(siblings.length - 1, Number(args?.newPosition ?? from)));
+      if (from !== to) {
+        siblings.splice(from, 1);
+        siblings.splice(to, 0, it);
+        siblings.forEach((sibling, index) => {
+          sibling.position = index;
+        });
+      }
       return null;
     }
 
@@ -498,6 +513,9 @@ export async function mockInvoke(cmd: string, args?: Record<string, unknown>): P
 
     case "get_settings":
       return db.settings;
+
+    case "get_prompt_defaults":
+      return DEFAULT_PROMPTS;
 
     case "set_settings":
       db.settings = { ...db.settings, ...(args?.settings as Partial<AppSettings>) };

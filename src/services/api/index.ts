@@ -19,6 +19,7 @@ import {
   Playlist,
   PlaylistItem,
   PlaylistProgress,
+  PromptDefaults,
   Quiz,
   ScheduledTask,
   StreakStats,
@@ -100,6 +101,8 @@ export const api = {
   /* settings */
   getSettings: () => call<AppSettings>("get_settings"),
   setSettings: (s: Partial<AppSettings>) => call<AppSettings>("set_settings", { settings: s }),
+  /** Shipped instructions for notes, quizzes and cards; Reset restores one. */
+  getPromptDefaults: () => call<PromptDefaults>("get_prompt_defaults"),
   /** Erases playlists, plan, completions/streaks, notes, quizzes, cards and
    *  chat threads. Preferences and the AI provider are kept. */
   wipeLearningData: () => call<void>("wipe_learning_data"),

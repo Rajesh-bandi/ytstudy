@@ -62,102 +62,36 @@
 .stagger > *:nth-child(7) { animation-delay: calc(var(--duration-stagger) * 6); }
 .stagger > *:nth-child(n + 8) { animation-delay: calc(var(--duration-stagger) * 7); }
 
-/* ---- Interaction affordances ---- */
-/* Interaction affordances are flat on purpose: a surface answers the pointer
-   with a warmer fill and a stronger hairline, never a lift or a glow. */
-.lift {
-  transition:
-    border-color var(--duration-fast) var(--ease-out),
-    background-color var(--duration-fast) var(--ease-out);
-}
-.lift:hover {
-  border-color: var(--border-strong);
-  background-color: color-mix(in oklab, var(--surface) 60%, var(--surface-2));
-}
-.lift:active {
-  background-color: var(--surface-2);
-  transition-duration: var(--duration-instant);
-}
+/* ---- Interaction affordance ---- */
+/* A surface answers the pointer by warming its fill and strengthening its
+   hairline. It never lifts, sweeps or glows. */
+@layer components {
+  .lift {
+    transition:
+      border-color var(--duration-fast) var(--ease-out),
+      background-color var(--duration-fast) var(--ease-out);
+  }
+  .lift:hover {
+    border-color: var(--border-strong);
+    background-color: color-mix(in oklab, var(--surface) 55%, var(--surface-2));
+  }
+  .lift:active {
+    background-color: var(--surface-2);
+    transition-duration: var(--duration-instant);
+  }
 
-/* Kept as a no-op so older markup keeps working; nothing sweeps anymore. */
-.sheen {
-  position: relative;
-}
-
-/* Attention pulse, for streaks and live counters */
-.glow-pulse {
-  animation: glow-pulse 2.8s var(--ease-in-out) infinite;
-}
-@keyframes glow-pulse {
-  0%,
-  100% {
-    filter: drop-shadow(0 0 2px transparent);
-    opacity: 0.9;
+  /* ---- Skeletons ---- */
+  .skeleton {
+    border-radius: var(--radius-md);
+    background: linear-gradient(
+      90deg,
+      var(--surface-2) 25%,
+      color-mix(in oklab, var(--surface-2) 72%, var(--text-muted)) 50%,
+      var(--surface-2) 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.8s ease-in-out infinite;
   }
-  50% {
-    filter: drop-shadow(0 0 7px var(--accent-glow));
-    opacity: 1;
-  }
-}
-
-/* Flame flicker, used by the streak meter */
-.flicker {
-  animation: flicker 2.2s ease-in-out infinite;
-}
-@keyframes flicker {
-  0%,
-  100% {
-    transform: scale(1) rotate(0deg);
-    opacity: 0.95;
-  }
-  35% {
-    transform: scale(1.06) rotate(-2deg);
-    opacity: 1;
-  }
-  65% {
-    transform: scale(0.98) rotate(1.5deg);
-  }
-}
-
-/* Progress fill: a slow travelling shine, pure CSS so it can never block */
-.bar-shine {
-  position: relative;
-  overflow: hidden;
-}
-.bar-shine::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgb(255 255 255 / 0.28) 45%,
-    transparent 90%
-  );
-  transform: translateX(-100%);
-  animation: bar-shine 2.6s var(--ease-in-out) infinite;
-}
-@keyframes bar-shine {
-  0% {
-    transform: translateX(-100%);
-  }
-  60%,
-  100% {
-    transform: translateX(100%);
-  }
-}
-
-/* ---- Skeletons ---- */
-.skeleton {
-  border-radius: var(--radius-md);
-  background: linear-gradient(
-    90deg,
-    var(--surface-2) 25%,
-    color-mix(in oklab, var(--surface-2) 70%, var(--text-muted)) 50%,
-    var(--surface-2) 75%
-  );
-  background-size: 200% 100%;
-  animation: shimmer 1.6s ease-in-out infinite;
 }
 @keyframes shimmer {
   from {
@@ -176,12 +110,10 @@
   from {
     opacity: 0;
     transform: translateY(6px);
-    filter: blur(2px);
   }
   to {
     opacity: 1;
     transform: none;
-    filter: blur(0);
   }
 }
 
@@ -194,9 +126,6 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
-  }
-  .lift:hover {
-    transform: none;
   }
 }
 

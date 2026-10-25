@@ -1,10 +1,16 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ArrowRight, Monitor, Moon, Sparkles, Sun, Trash2, Zap } from "lucide-react";
+import { ArrowRight, FileText, Monitor, Moon, Sparkles, Sun, Trash2, Zap } from "lucide-react";
 import { api } from "@/services/api";
 import type { AppSettings, CompanionSkin } from "@/types";
 import { Character } from "@/components/companion/companion";
-import { useTheme, type ThemeMode } from "@/app/providers/theme-provider";
+import {
+  applyMotion,
+  storedMotion,
+  useTheme,
+  type MotionPreference,
+  type ThemeMode,
+} from "@/app/providers/theme-provider";
 import { TopBar } from "@/components/layout/top-bar";
 import { Button } from "@/components/ui/button";
 import {
@@ -40,12 +46,14 @@ export default function Settings() {
   const [wipeOpen, setWipeOpen] = useState(false);
   const [wipeText, setWipeText] = useState("");
   const [wiping, setWiping] = useState(false);
-  const [invisibleMotion, setInvisibleMotion] = useState(
-    () => document.documentElement.dataset.motion === "reduced",
-  );
+  const [motionPref, setMotionPref] = useState<MotionPreference>(storedMotion);
+  const [horizon, setHorizon] = useState("21");
 
   useEffect(() => {
-    void api.getSettings().then(setSettings);
+    void api.getSettings().then((s) => {
+      setSettings(s);
+      setHorizon(String(s.daily_horizon_days));
+    });
   }, []);
 
   const save = useCallback(async (patch: Partial<AppSettings>) => {
@@ -72,7 +80,7 @@ export default function Settings() {
 
   return (
     <>
-      <TopBar title="Preferences" subtitle="Appearance and study-day rules" />
+      <TopBar title="Settings" subtitle="Appearance, companion and study-day rules" />
       <div className="mx-auto flex w-full max-w-4xl flex-col gap-5 p-5 lg:p-6">
         <Card>
           <CardHeader>
@@ -127,20 +135,20 @@ export default function Settings() {
               <div className="flex items-center gap-2.5">
                 <Zap className="size-4 shrink-0 text-warning" />
                 <div>
-                  <p className="text-sm text-text-primary">Respect reduced motion</p>
+                  <p className="text-sm text-text-primary">Reduce motion</p>
                   <p className="text-[11px] text-text-muted">
-                    The app already honours your OS setting; force-disable decorative animation
-                    everywhere.
+                    The app already honours your OS setting. Turn this on to collapse decorative
+                    animation everywhere; the preference is remembered.
                   </p>
                 </div>
               </div>
               <Switch
-                ariaLabel="Force disable decorative animation"
-                checked={invisibleMotion}
+                ariaLabel="Reduce decorative animation"
+                checked={motionPref === "reduced"}
                 onCheckedChange={(v) => {
-                  setInvisibleMotion(v);
-                  // motion.css keys off data-motion="reduced"
-                  document.documentElement.dataset.motion = v ? "reduced" : "full";
+                  const next: MotionPreference = v ? "reduced" : "full";
+                  setMotionPref(next);
+                  applyMotion(next);
                 }}
               />
             </div>
@@ -158,6 +166,26 @@ export default function Settings() {
                   <p className="text-[12.5px] text-text-primary">AI provider</p>
                   <p className="text-[10.5px] text-text-muted">
                     OmniRoute, OpenAI, OpenRouter, Groq or a local Ollama endpoint
+                  </p>
+                </div>
+              </div>
+              <ArrowRight className="size-4 text-text-muted" aria-hidden />
+            </div>
+          </Card>
+        </Link>
+
+        <Link to="/settings/prompts" className="block">
+          <Card className="lift p-4">
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <span className="flex size-8 items-center justify-center rounded-[3px] border border-accent/30 bg-accent-soft text-accent">
+                  <FileText className="size-4" aria-hidden />
+                </span>
+                <div>
+                  <p className="text-[12.5px] text-text-primary">Generation prompts</p>
+                  <p className="text-[10.5px] text-text-muted">
+                    Edit what the model is told to write for notes, quizzes and cards — reset one
+                    field at a time
                   </p>
                 </div>
               </div>
@@ -232,12 +260,19 @@ export default function Settings() {
                 type="number"
                 min={7}
                 max={90}
+                inputMode="numeric"
                 className="w-32"
-                value={settings?.daily_horizon_days ?? 21}
-                onChange={(e) => {
-                  if (!settings) return;
-                  const v = Math.max(7, Math.min(90, Number(e.target.value) || 21));
-                  void save({ daily_horizon_days: v });
+                value={horizon}
+                onChange={(e) => setHorizon(e.target.value)}
+                onBlur={() => {
+                  const v = Math.max(7, Math.min(90, Number(horizon) || 21));
+                  setHorizon(String(v));
+                  if (settings && v !== settings.daily_horizon_days) {
+                    void save({ daily_horizon_days: v });
+                  }
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") e.currentTarget.blur();
                 }}
               />
             </Field>

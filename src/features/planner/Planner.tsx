@@ -555,9 +555,7 @@ function DaySection({
           collapsed ? "border-transparent" : "border-border-subtle",
         )}
       >
-        <span className="text-[10px] uppercase tracking-[0.14em] text-text-muted">
-          Day {dayNumber}
-        </span>
+        <span className="micro text-[9px]">Day {dayNumber}</span>
         <span
           className={cn(
             "numeric text-[13px] font-medium",
@@ -567,9 +565,7 @@ function DaySection({
           {format(parseKey(date), "EEE d MMM")}
         </span>
         {isToday ? <Badge tone="accent">today</Badge> : null}
-        <span className="numeric text-[10.5px] text-text-muted">
-          {done}/{tasks.length} done
-        </span>
+        {isPast && !isToday ? <span className="micro text-[9px]">past</span> : null}
         <span className="ml-auto flex items-center gap-2.5">
           <DashMeter value={done} total={tasks.length} />
           <span className="numeric text-[10.5px] text-text-muted">
